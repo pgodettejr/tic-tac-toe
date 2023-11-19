@@ -1,13 +1,18 @@
-// Game board example object. Will change this after some more thought is put into it.
-const gameboard = { [bob]: yes };
+// Game board example object
+const gameboard = (function () {
+  const boardPosition = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  return boardPosition;
+})();
 
-// List of players. Will need to change this from a constructor to a factory function wrapped inside an IIFE (module pattern)
-function Players (name, score, x, o) {
+// List of players. Might not need to be a factory function wrapped inside an IIFE (module pattern)?
+function Players (name, marker) {
   this.name = name;
-  this.score = score;
-  this.x = x;
-  this.o = o;
+  this.marker = marker;
 }
 
+// Factory function variant of "Player" code above (creating a player)
+function createPlayer (name, marker) {
+  return { name, marker };
+}
 // Object that controls game flow on the display (also an example for now)
 const displayController = {};
