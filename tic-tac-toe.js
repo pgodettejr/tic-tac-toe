@@ -4,10 +4,11 @@ const gameboard = (function () {
   return boardPosition;
 })();
 
-// List of players. Might not need to be a factory function wrapped inside an IIFE (module pattern)?
+// List of players. Might not need to be a factory function wrapped inside an IIFE (module pattern)? Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
 function Players (name, marker) {
   this.name = name;
   this.marker = marker;
+  // const { name, marker } = Players; <-- possibly replace this.name & this.marker all at once?
 }
 
 // Factory function variant of "Player" code above (creating a player)
@@ -15,7 +16,7 @@ function Players (name, marker) {
 //   return { name, marker };
 // }
 
-// Object that controls game flow on the display (also an example for now)
+// Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
 const displayController = {
   activePlayer: new Players,
   gameResult: {
