@@ -27,3 +27,5 @@ const displayController = {
     return gameboard;
   }
 };
+
+// Should each cell be a button when we do the UI later on (buttons help with accessibility)? Or just "clickable" (mouseclick, mousedown, etc) squares/divs?
