@@ -70,7 +70,7 @@ const Gameboard = (function () {
       displayBoard();
       checkWin(); // Not working properly (possibly an issue with "checkWin" function above)
 
-      if (makeMove > 9) { 
+      if (makeMove > 9) { // This may need to be (makeMove >= 9) instead
         console.log(`Tie game :/`); // SHOULD check for draws
         // Add logic to display "You Lose!" to the other player
         // Disable further interactions
@@ -78,6 +78,15 @@ const Gameboard = (function () {
     } else {
       console.log(`Position: (${row},${col}) is already occupied. Try again.`);
     }
+
+    // Check winner example from RPS project. There was no separate disableButtons() function ever made though. Built-in JS method/function?
+    // if(playerScore === 5) {
+    //   winner.textContent = "You Win!";
+    //   disableButtons();
+    // } else if(computerScore === 5) {
+    //   winner.textContent = "You Lose";
+    //   disableButtons();
+    // }
   }
 
   return { board, marker, displayBoard, checkWin, makeMove };
