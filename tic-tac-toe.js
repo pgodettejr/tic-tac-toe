@@ -16,7 +16,7 @@ const Gameboard = (function () {
   // Checks to see if a player has won the game
   const checkWin = () => {
     const board = Gameboard.board;
-    const markers = ["X", "O"];
+    const markers = ["X", "O"]; // Even if I move this back up under let board, wouldn't this still be a block-level variable and not global?
     for (let marker of markers) {
       switch (true) {
         case // Check the rows
@@ -86,16 +86,31 @@ function Players (name, marker) {
 // }
 
 // Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
-const displayController = {
-  activePlayer: new Players,
-  gameResult: {
-    winningPlayer: null,
-    losingPlayer: null,
-  },
-  boardState: function (Gameboard) {
-    return Gameboard;
-  }
-};
+const displayController = (function () {
+  // const markers = ["X", "O"];
+  // for (const marker in markers) {
+  //   const markers[0] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
+  //   const markers[1] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
+
+  //   markers[0].setAttribute("data-cell", "X");
+  //   markers[1].setAttribute("data-cell", "O");
+
+  //   const markerX = document.createTextNode(`${marker[0]}`);
+  //   const markerO = document.createTextNode(`${marker[1]}`);
+
+  //   markers[0].appendChild(markerX);
+  //   markers[1].appendChild(markerO);
+  // }
+
+  // activePlayer: new Players,
+  // gameResult: {
+  //   winningPlayer: null,
+  //   losingPlayer: null,
+  // },
+  // boardState: function (Gameboard) {
+  //   return Gameboard;
+  // }
+})();
 
 // Should each cell be a button when we do the UI later on (buttons help with accessibility)? Or just "clickable" (mouseclick, mousedown, etc) squares/divs?
 
