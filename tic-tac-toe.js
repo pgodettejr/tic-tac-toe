@@ -87,7 +87,8 @@ function Players (name, marker) {
 
 // Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
 const displayController = (function () {
-  // const markers = ["X", "O"];
+  // Should implement "Gameboard.makeMove" somewhere in this function (not necessarily here). This should be the only way the UI has access to the Gameboard above?
+  // const markers = ["X", "O"]; // Somehow need to implement "Gameboard.markers" here to access the markers. Would need to move markers variable up the scope (see checkWin above)
   // for (const marker in markers) {
   //   const markers[0] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
   //   const markers[1] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
