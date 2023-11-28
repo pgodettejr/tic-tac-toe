@@ -6,8 +6,6 @@ const Gameboard = (function () {
     [null, null, null],
   ];
 
-  const marker = ["X", "O"];
-
   // Displays the current state of the game board (in the console)
   const displayBoard = () => {
     for (let row of board) {
@@ -15,60 +13,44 @@ const Gameboard = (function () {
     }
   };  
 
-  // Checks to see if a player has won the game. Not working properly (or it's an issue with "makeMove" below). May also incorrectly declare winner for 3-in-a-row of ANY marker
-  const checkWin = (marker) => {
-    // Check the rows
-    for (let i = 0; i < 3; i++) {
-      if (
-        board[i][0] === marker &&
-        board[i][1] === marker &&
-        board[i][2] === marker
-      ) {
-        console.log(`Marker ${marker} is the Winner`);
-        return true;
+  // Checks to see if a player has won the game
+  const checkWin = () => {
+    const board = Gameboard.board;
+    const markers = ["X", "O"];
+    for (let marker of markers) {
+      switch (true) {
+        case // rows
+        (board[0][0] === marker && board[0][1] === marker && board[0][2] === marker) ||
+        (board[1][0] === marker && board[1][1] === marker && board[1][2] === marker) ||
+        (board[2][0] === marker && board[2][1] === marker && board[2][2] === marker):
+          console.log(`Marker ${marker} is the Winner`);
+          return true;
+
+        case // columns
+        (board[0][0] === marker && board[1][0] === marker && board[2][0] === marker) ||
+        (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
+        (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker):
+          console.log(`Marker ${marker} is the Winner`);
+          return true;
+
+        case // diagonals
+        (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
+        (board[2][0] === marker && board[1][1] === marker && board[0][2] === marker):
+          console.log(`Marker ${marker} is the Winner`);
+          return true;
       }
-    }
-
-    // Check the columns
-    for (let i = 0; i < 3; i++) {
-      if (
-        board[i][0] === marker &&
-        board[i][1] === marker &&
-        board[i][2] === marker
-      ) {
-        console.log(`Marker ${marker} is the Winner`);
-        return true;
-      }
-    }
-
-    // Alternative logic for columns. Longer, not as good. Keep in case for loop above this doesn't work
-    // if (
-    //   (board[0][0] === marker && board[1][0] === marker && board[2][0] === marker) ||
-    //   (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
-    //   (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker)
-    // ) {
-    //   return true;
-    // }
-
-    // Check the diagonals
-    if (
-      (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
-      (board[0][2] === marker && board[1][1] === marker && board[2][0] === marker)
-    ) {
-      console.log(`Marker ${marker} is the Winner`);
-      return true;
     }
 
     return false;
   }
 
   // Update the board with the player's move
-  const makeMove = (row, col, marker) => {
+  const makeMove = (row, col, markers) => {
     if (board[row][col] === null) {
-      board[row][col] = marker;
-      console.log(`Position: (${row},${col}) now occupied by ${marker}`);
+      board[row][col] = markers;
+      console.log(`Position: (${row},${col}) now occupied by ${markers}`);
       displayBoard();
-      checkWin(); // Not working properly (possibly an issue with "checkWin" function above)
+      checkWin();
 
       if (makeMove > 9) { // This may need to be (makeMove >= 9) instead
         console.log(`Tie game :/`); // SHOULD check for draws
@@ -89,7 +71,8 @@ const Gameboard = (function () {
     // }
   }
 
-  return { board, marker, displayBoard, checkWin, makeMove };
+  // Add marker or markers back in after "board" if needed
+  return { board, displayBoard, checkWin, makeMove };
 })();
 
 // List of players. Might not need to be a factory function wrapped inside an IIFE (module pattern)? Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
@@ -117,3 +100,50 @@ const displayController = {
 };
 
 // Should each cell be a button when we do the UI later on (buttons help with accessibility)? Or just "clickable" (mouseclick, mousedown, etc) squares/divs?
+
+
+// Old and/or incorrect code
+
+// const marker = ["X", "O"]; <-- had "global" scope within IIFE, now is just within checkWin() function (also within IIFE)
+
+//   // Check the rows
+//   for (let i = 0; i < 3; i++) {
+//     if (
+//       board[i][0] === marker &&
+//       board[i][1] === marker &&
+//       board[i][2] === marker
+//     ) {
+//       console.log(`Marker ${marker} is the Winner`);
+//       return true;
+//     }
+//   }
+
+//   // Check the columns
+//   for (let i = 0; i < 3; i++) {
+//     if (
+//       board[i][0] === marker &&
+//       board[i][1] === marker &&
+//       board[i][2] === marker
+//     ) {
+//       console.log(`Marker ${marker} is the Winner`);
+//       return true;
+//     }
+//   }
+
+  // Alternative logic for columns. Longer, not as good. Keep in case for loop above this doesn't work
+  // if (
+  //   (board[0][0] === marker && board[1][0] === marker && board[2][0] === marker) ||
+  //   (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
+  //   (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker)
+  // ) {
+  //   return true;
+  // }
+
+  // Check the diagonals
+//   if (
+//     (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
+//     (board[0][2] === marker && board[1][1] === marker && board[2][0] === marker)
+//   ) {
+//     console.log(`Marker ${marker} is the Winner`);
+//     return true;
+//   }
