@@ -19,21 +19,21 @@ const Gameboard = (function () {
     const markers = ["X", "O"];
     for (let marker of markers) {
       switch (true) {
-        case // rows
+        case // Check the rows
         (board[0][0] === marker && board[0][1] === marker && board[0][2] === marker) ||
         (board[1][0] === marker && board[1][1] === marker && board[1][2] === marker) ||
         (board[2][0] === marker && board[2][1] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
           return true;
 
-        case // columns
+        case // Check the columns
         (board[0][0] === marker && board[1][0] === marker && board[2][0] === marker) ||
         (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
         (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
           return true;
 
-        case // diagonals
+        case // Check the diagonals
         (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
         (board[2][0] === marker && board[1][1] === marker && board[0][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
@@ -41,6 +41,8 @@ const Gameboard = (function () {
       }
     }
 
+    // Check for draws
+    console.log(`Tie game :/`); 
     return false;
   }
 
@@ -52,11 +54,8 @@ const Gameboard = (function () {
       displayBoard();
       checkWin();
 
-      if (makeMove > 9) { // This may need to be (makeMove >= 9) instead
-        console.log(`Tie game :/`); // SHOULD check for draws
-        // Add logic to display "You Lose!" to the other player
-        // Disable further interactions
-      }
+      // Add logic to display "You Lose!" to the other player
+      // Disable further interactions
     } else {
       console.log(`Position: (${row},${col}) is already occupied. Try again.`);
     }
@@ -71,7 +70,6 @@ const Gameboard = (function () {
     // }
   }
 
-  // Add marker or markers back in after "board" if needed
   return { board, displayBoard, checkWin, makeMove };
 })();
 
@@ -94,8 +92,8 @@ const displayController = {
     winningPlayer: null,
     losingPlayer: null,
   },
-  boardState: function (gameboard) {
-    return gameboard;
+  boardState: function (Gameboard) {
+    return Gameboard;
   }
 };
 
@@ -147,3 +145,7 @@ const displayController = {
 //     console.log(`Marker ${marker} is the Winner`);
 //     return true;
 //   }
+      // SHOULD check for draws but doesn't
+      // if (makeMove >= 9 && checkWin === false) { 
+      //   console.log(`Tie game :/`); 
+      // }
