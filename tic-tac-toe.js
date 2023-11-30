@@ -38,6 +38,9 @@ const Gameboard = (function () {
         (board[2][0] === marker && board[1][1] === marker && board[0][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
           return true;
+
+        // Add logic to display "You Lose!" to the other player
+        // Disable further interactions
       }
     }
 
@@ -53,9 +56,6 @@ const Gameboard = (function () {
       console.log(`Position: (${row},${col}) now occupied by ${markers}`);
       displayBoard();
       checkWin();
-
-      // Add logic to display "You Lose!" to the other player
-      // Disable further interactions
     } else {
       console.log(`Position: (${row},${col}) is already occupied. Try again.`);
     }
@@ -73,22 +73,44 @@ const Gameboard = (function () {
   return { board, displayBoard, checkWin, makeMove };
 })();
 
-// List of players. Might not need to be a factory function wrapped inside an IIFE (module pattern)? Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
-function Players (name, marker) {
-  this.name = name;
-  this.marker = marker;
-  // const { name, marker } = Players; <-- possibly replace this.name & this.marker all at once?
-}
+// Function that controls game flow, state of the game's turns & player info
+function gameController () {
+  // List of players. Might not need to be a factory function wrapped inside an IIFE (module pattern)? Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
+  function Players (name, marker) {
+    this.name = name;
+    this.marker = marker;
+    // const { name, marker } = Players; <-- possibly replace this.name & this.marker all at once?
+  }
 
-// Factory function variant of "Player" code above (creating a player)
-// function createPlayer (name, marker) {
-//   return { name, marker };
-// }
+  // Factory function variant of "Player" code above (creating a player)
+  // function createPlayer (name, marker) {
+  //   return { name, marker };
+  // }
+
+  const board = Gameboard();
+
+  let activePlayer = Players[0];
+
+  const switchTurn = () => {
+    activePlayer = activePlayer === Players[0] ? Players[1] : Players[0];
+  };
+
+  const getActivePlayer = () => activePlayer;
+
+  const newRound = () => {
+    board.makeMove();
+    console.log(`${getActivePlayer().name}'s turn.`);
+  }
+
+  newRound();
+
+  return { switchTurn, getActivePlayer };
+}
 
 // Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
 const displayController = (function () {
   // Should implement "Gameboard.makeMove" somewhere in this function (not necessarily here). This should be the only way the UI has access to the Gameboard above?
-  // const markers = ["X", "O"]; // Somehow need to implement "Gameboard.markers" here to access the markers. Would need to move markers variable up the scope (see checkWin above)
+  // const markerUI = Gameboard.markers; // Would need to move markers variable up the scope (see checkWin above)
   // for (const marker in markers) {
   //   const markers[0] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
   //   const markers[1] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
