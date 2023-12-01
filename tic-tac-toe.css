@@ -11,10 +11,13 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Will centering this make sure that everything else is centered on the page? Flexbox center with space-around or space-between? */
 .container {
   width: min(900px, 100% - 3rem);
   margin-inline: auto;
 }
+
+/* .players styling goes here */
 
 .board {
   display: grid;
@@ -35,6 +38,7 @@ body {
   line-height: 100px;
 }
 
+/* Flexbox center with space-around or space-between */
 .buttons {
   margin: 2rem;
   padding: 16px 32px;
