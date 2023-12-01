@@ -75,6 +75,10 @@ const Gameboard = (function () {
 
 // Function that controls game flow, state of the game's turns & player info
 function gameController () {
+  const board = Gameboard();
+
+  let activePlayer = Players[0];
+  
   // List of players. Might not need to be a factory function wrapped inside an IIFE (module pattern)? Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
   function Players (name, marker) {
     this.name = name;
@@ -86,10 +90,6 @@ function gameController () {
   // function createPlayer (name, marker) {
   //   return { name, marker };
   // }
-
-  const board = Gameboard();
-
-  let activePlayer = Players[0];
 
   const switchTurn = () => {
     activePlayer = activePlayer === Players[0] ? Players[1] : Players[0];
