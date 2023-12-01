@@ -10,3 +10,57 @@ body {
   min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.container {
+  width: min(900px, 100% - 3rem);
+  margin-inline: auto;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  width: 250px;
+  margin: 40px auto;
+  top: 25%;
+}
+
+.cell {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 60px;
+  width: 100px;
+  height: 100px;
+  box-shadow: 0 0 0 1px #333333;
+  border: 1px solid #FFF;
+  cursor: pointer;
+  line-height: 100px;
+}
+
+.buttons {
+  margin: 2rem;
+  padding: 16px 32px;
+  border: none;
+  border-radius: 8px;
+  display: inline-block;
+
+  & .start {
+    background-color: #596D48;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  & .start:hover {
+    background: hsl(92 20% 56%);
+  }
+
+  & .restart {
+    background-color: red;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  & .restart:hover {
+    background: hsl(0, 100%, 75%);
+  }
+}
