@@ -11,7 +11,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Will centering this make sure that everything else is centered on the page? Flexbox center with space-around or space-between? */
 .container {
   width: min(900px, 100% - 3rem);
   margin-inline: auto;
@@ -38,33 +37,37 @@ body {
   line-height: 100px;
 }
 
-/* Flexbox center with space-around or space-between */
-.buttons {
+button {
   margin: 2rem;
   padding: 16px 32px;
   border: none;
   border-radius: 8px;
   display: inline-block;
 
-  & .start {
-    background-color: #596D48;
-    font-size: 16px;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
+  /* Only use if we go back to targeting .buttons div (and we're not using '&' elements below this)
+  display: flex;
+  justify-content: center;
+  align-items: center; */
+}
 
-  & .start:hover {
-    background: hsl(92 20% 56%);
-  }
+.start {
+  background-color: #596D48;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
 
-  & .restart {
-    background-color: red;
-    font-size: 16px;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
+.start:hover {
+  background: hsl(92 20% 56%);
+}
 
-  & .restart:hover {
-    background: hsl(0, 100%, 75%);
-  }
+.restart {
+  background-color: red;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.restart:hover {
+  background: hsl(0, 100%, 75%);
 }
