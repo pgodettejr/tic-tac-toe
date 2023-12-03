@@ -16,7 +16,7 @@ const Gameboard = (function () {
   // Checks to see if a player has won the game
   const checkWin = () => {
     const board = Gameboard.board;
-    const markers = ["X", "O"]; // Even if I move this back up under let board, wouldn't this still be a block-level variable and not global?
+    const markers = ["X", "O"];
     for (let marker of markers) {
       switch (true) {
         case // Check the rows
@@ -55,7 +55,7 @@ const Gameboard = (function () {
       board[row][col] = markers;
       console.log(`Position: (${row},${col}) now occupied by ${markers}`);
       displayBoard();
-      checkWin();
+      checkWin(); // The whole reason why this function can use 'markers' as a parameter and access it from checkWin(). Closures, baby!
     } else {
       console.log(`Position: (${row},${col}) is already occupied. Try again.`);
     }
