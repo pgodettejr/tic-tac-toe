@@ -16,14 +16,60 @@ body {
   margin-inline: auto;
 }
 
-/* .players styling goes here */
+/* Player 1 & 2 section styling goes here - styling starts at '.players' & ends at '.form-row input:focus' */
+.players {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  gap: 2rem;
+}
+
+section {
+  padding: 40px 30px 40px;
+}
+
+section > div {
+  display: flex;
+  justify-content: space-between;
+  max-width: 40%;
+  margin: 0;
+  padding: 10px 0;
+  gap: 80%;
+}
+
+label, input {
+  margin: 10px 0;
+  height: auto;
+}
+
+.form-row input {
+  border: 1px solid #E5E7EB;
+  border-radius: 5px;
+  box-shadow: none;
+  padding: 5px;
+}
+
+.form-row input:invalid {
+  border: 1px solid red; /* or #D55C5F */
+  box-shadow: none;
+}
+
+.form-row input:focus {
+  box-shadow: 5px 4px 4px #c7c9cc;
+}
 
 .board {
   display: grid;
   grid-template-columns: repeat(3, auto);
   width: 250px;
   margin: 40px auto;
-  top: 25%;
 }
 
 .cell {
@@ -37,17 +83,19 @@ body {
   line-height: 100px;
 }
 
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10em;
+}
+
 button {
   margin: 2rem;
   padding: 16px 32px;
   border: none;
   border-radius: 8px;
   display: inline-block;
-
-  /* Only use if we go back to targeting .buttons div (and we're not using '&' elements below this)
-  display: flex;
-  justify-content: center;
-  align-items: center; */
 }
 
 .start {
