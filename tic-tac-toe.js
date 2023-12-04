@@ -104,7 +104,9 @@ function gameController () {
 
   newRound();
 
-  return { switchTurn, getActivePlayer };
+  // 'disableButtons' function that disables all buttons and the board itself once the game ends goes here
+
+  return { switchTurn, getActivePlayer }; // should 'board', 'activePlayer', 'Players', 'disableButtons' and 'newRound' be added to this list as well?
 }
 
 // Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
