@@ -9,8 +9,22 @@
   
 <body>
   <div id="container">
-    <div class="players"> <!-- Should this be in a "form" style format or nah? (they have to be able to enter their names regardless) -->
-
+    <div class="players">
+      <form action="" method="get" class="player-names">
+        <section>
+          <div class="player-section">
+            <div class="form-row">
+              <label for="player-1">Player 1</label>
+              <input type="text" name="player-1" id="player-1" required />
+            </div>
+  
+            <div class="form-row">
+              <label for="player-2">Player 2</label>
+              <input type="text" name="player-2" id="player-2" required />
+            </div>
+          </div>
+        </section>
+      </form>
     </div>
 
     <div class="board">
