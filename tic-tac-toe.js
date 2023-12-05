@@ -83,6 +83,7 @@ function gameController () {
   let activePlayer = Players[0];
   
   // List of players. Might not need to be a factory function wrapped inside an IIFE (module pattern)? Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
+  // Link name with HTML form element. Link marker with randomly assigned marker in startGame() function.
   function Players (name, marker) {
     this.name = name;
     this.marker = marker;
