@@ -77,6 +77,9 @@ const Gameboard = (function () {
 function gameController () {
   const board = Gameboard();
 
+  // Change all instances of 'activePlayer' to 'currentPlayer'
+  // Add a 'let gameActive = false'. Will need to change this to 'true' in a startGame() function somewhere else under gameController
+  // Change back to 'gameActive = false' in the checkWin() function and link that function back to this one...somehow (declare variable = gameController.gameActive?)
   let activePlayer = Players[0];
   
   // List of players. Might not need to be a factory function wrapped inside an IIFE (module pattern)? Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
