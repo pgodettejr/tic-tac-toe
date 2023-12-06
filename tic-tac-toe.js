@@ -115,6 +115,11 @@ function gameController () {
 
 // Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
 const displayController = (function () {
+  const cells = document.querySelectorAll('.cell');
+  const grid = document.querySelector('.board');
+  const startBtn = document.querySelector('.start');
+  const restartBtn = document.querySelector('.restart');
+
   // Should implement "Gameboard.makeMove" somewhere in this function (not necessarily here). This should be the only way the UI has access to the Gameboard above?
   // const markerUI = Gameboard.markers; // Would need to move markers variable up the scope (see checkWin above)
   // for (const marker in markers) {
