@@ -81,6 +81,12 @@ label, input {
   border: 1px solid #FFF;
   cursor: pointer;
   line-height: 100px;
+  text-align: center;
+  /* vertical-align: middle; */
+}
+
+.cell:hover {
+  border: 5px solid #E5E7EB;
 }
 
 .buttons {
