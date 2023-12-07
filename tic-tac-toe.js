@@ -43,7 +43,8 @@ const Gameboard = (function () {
           console.log(`Marker ${marker} is the Winner`);
           return true;
 
-        // Add logic to display "You Lose!" to the other player
+        // Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
+        // Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
         // Disable further interactions
       }
 
@@ -101,11 +102,12 @@ function gameController () {
   //   return { name, marker };
   // }
 
+  // Starts the game
   const startGame = () => {
     // Randomly assigns 'X' or 'O' marker to players
     currentPlayer = Math.random() < 0.5 ? 'X' : 'O';
 
-    // Displays assigned player markers
+    // Displays assigned player markers. May need to be getElementById('player-1/2') instead
     document.querySelector("label[for=player-1]").innerText = `Player 1 (${currentPlayer})`;
     document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === 'X' ? 'O' : 'X'})`;
 
@@ -113,6 +115,18 @@ function gameController () {
     gameActive = true;
   }
 
+  // Restarts the game
+  const restartGame = () => {
+    board.board = [
+      [null, null, null], 
+      [null, null, null], 
+      [null, null, null],
+    ];
+    // Add logic here that clears the UI & resets any styling
+    gameActive = false;
+  }
+
+  // Switches player turns
   const switchTurn = () => {
     currentPlayer = currentPlayer === Players[0] ? Players[1] : Players[0];
   };
@@ -128,17 +142,42 @@ function gameController () {
 
   // 'disableButtons' function that disables all buttons and the board itself once the game ends goes here
 
-  return { gameActive, startGame, switchTurn, getCurrentPlayer }; // should 'board', 'currentPlayer', 'Players', 'disableButtons' and 'newRound' be added to this list as well?
+  return { gameActive, startGame, restartGame, switchTurn, getCurrentPlayer }; // should 'board', 'currentPlayer', 'Players', 'disableButtons' & 'newRound' be added to this list?
 }
 
 // Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
 const displayController = (function () {
+  // DOM for display elements
   const cells = document.querySelectorAll('.cell');
   const grid = document.querySelector('.board');
   const startBtn = document.querySelector('.start');
   const restartBtn = document.querySelector('.restart');
 
-  // Should implement "Gameboard.makeMove" somewhere in this function (not necessarily here). This should be the only way the UI has access to the Gameboard above?
+  // UI access to Gameboard above
+  const board = Gameboard();
+
+  // UI access to gameController above
+  const gameFlow = gameController();
+
+  // 'Start' button functionality
+  startBtn.addEventListener('click', () => {
+    gameFlow.startGame();
+    startBtn.setAttribute("disabled", "");
+  });
+
+  // 'Restart' button functionality
+  restartBtn.addEventListener('click', () => {
+    gameFlow.restartGame();
+    startBtn.setAttribute("disabled", "");
+  });
+
+  // Places player marker in a given cell once clicked
+  cells.forEach((cell) => {
+    cell.addEventListener('click', () => {
+      board.makeMove();
+    });
+  });
+
   // const markerUI = Gameboard.markers; // Would need to move markers variable up the scope (see checkWin above)
   // for (const marker in markers) {
   //   const markers[0] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
@@ -162,6 +201,8 @@ const displayController = (function () {
   // boardState: function (Gameboard) {
   //   return Gameboard;
   // }
+
+  return { cells, grid, startBtn, restartBtn, board, gameFlow }
 })();
 
 // Should each cell be a button when we do the UI later on (buttons help with accessibility)? Or just "clickable" (mouseclick, mousedown, etc) squares/divs?
