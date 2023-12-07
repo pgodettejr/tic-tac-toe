@@ -6,8 +6,8 @@ const Gameboard = (function () {
     [null, null, null],
   ];
 
-  // Logic that represents whether the game is active or not. Figure out how to get this to only connect to gameController, not just a function within gameController (let state?)
-  let status = gameController.gameActive;
+  // Allows access to the gameController function that controls game flow
+  let state = gameController();
 
   // Allows access to the UI
   let display = displayController();
@@ -19,11 +19,11 @@ const Gameboard = (function () {
     }
   };  
 
-  // Checks to see if a player has won the game. Change gameState based on notes for 'status' variable above.
+  // Checks to see if a player has won the game
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
-    const gameState = Gameboard.status;
+    let gameState = state.gameActive;
     for (let marker of markers) {
       switch (true) {
         case // Check the rows
@@ -55,14 +55,11 @@ const Gameboard = (function () {
         // Add default case here that will switch the players turn (switchTurn and/or newRound in gameController)
       }
 
-      // Change gameState based on notes for 'status' variable above.
       gameState = false;
     }
 
     // Check for draws
     console.log(`Tie game :/`); 
-
-    // Change gameState based on notes for 'status' variable above.
     gameState = false;
     // display.disableAll();
     return false;
@@ -89,7 +86,7 @@ const Gameboard = (function () {
     // }
   }
 
-  return { board, status, display, displayBoard, checkWin, makeMove };
+  return { board, state, display, displayBoard, checkWin, makeMove };
 })();
 
 // Function that controls game flow, state of the game's turns & player info
