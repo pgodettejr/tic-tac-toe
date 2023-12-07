@@ -6,8 +6,11 @@ const Gameboard = (function () {
     [null, null, null],
   ];
 
-  // Logic that represents whether the game is active or not. Pulled from gameController
+  // Logic that represents whether the game is active or not. Figure out how to get this to only connect to gameController, not just a function within gameController (let state?)
   let status = gameController.gameActive;
+
+  // Allows access to the UI
+  let display = displayController();
 
   // Displays the current state of the game board (in the console)
   const displayBoard = () => {
@@ -16,7 +19,7 @@ const Gameboard = (function () {
     }
   };  
 
-  // Checks to see if a player has won the game
+  // Checks to see if a player has won the game. Change gameState based on notes for 'status' variable above.
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
@@ -28,6 +31,7 @@ const Gameboard = (function () {
         (board[1][0] === marker && board[1][1] === marker && board[1][2] === marker) ||
         (board[2][0] === marker && board[2][1] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
+          // display.disableAll();
           return true;
 
         case // Check the columns
@@ -35,27 +39,32 @@ const Gameboard = (function () {
         (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
         (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
+          // display.disableAll();
           return true;
 
         case // Check the diagonals
         (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
         (board[2][0] === marker && board[1][1] === marker && board[0][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
+          // display.disableAll();
           return true;
 
         // Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
         // Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
-        // Disable further interactions
 
-        // Add default case here that will switch the players turn (switchTurn in gameController)
+        // Add default case here that will switch the players turn (switchTurn and/or newRound in gameController)
       }
 
+      // Change gameState based on notes for 'status' variable above.
       gameState = false;
     }
 
     // Check for draws
     console.log(`Tie game :/`); 
+
+    // Change gameState based on notes for 'status' variable above.
     gameState = false;
+    // display.disableAll();
     return false;
   }
 
@@ -80,7 +89,7 @@ const Gameboard = (function () {
     // }
   }
 
-  return { board, status, displayBoard, checkWin, makeMove };
+  return { board, status, display, displayBoard, checkWin, makeMove };
 })();
 
 // Function that controls game flow, state of the game's turns & player info
@@ -137,6 +146,7 @@ function gameController () {
 
   const getCurrentPlayer = () => currentPlayer;
 
+  // This might be redundant with other code and/or may need to be added to forEach method on the board cells below (in displayController) 
   const newRound = () => {
     board.makeMove();
     console.log(`${getCurrentPlayer().name}'s turn.`);
@@ -144,9 +154,7 @@ function gameController () {
 
   newRound();
 
-  // 'disableButtons' function that disables all buttons and the board itself once the game ends goes here
-
-  return { gameActive, startGame, restartGame, switchTurn, getCurrentPlayer }; // should 'board', 'currentPlayer', 'Players', 'disableButtons' & 'newRound' be added to this list?
+  return { gameActive, startGame, restartGame, switchTurn, getCurrentPlayer }; // should 'board', 'currentPlayer', 'Players' & 'newRound' be added to this list?
 }
 
 // Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
@@ -179,8 +187,15 @@ const displayController = (function () {
   cells.forEach((cell) => {
     cell.addEventListener('click', () => {
       board.makeMove();
+      // gameFlow.newRound(); ?
     });
   });
+
+  // Disables all buttons & the board itself once the game ends
+  const disableAll = () => {
+    button.setAttribute("disabled", "");
+    cells.setAttribute("disabled", "");
+  };
 
   // const markerUI = Gameboard.markers; // Would need to move markers variable up the scope (see checkWin above)
   // for (const marker in markers) {
@@ -206,7 +221,7 @@ const displayController = (function () {
   //   return Gameboard;
   // }
 
-  return { cells, grid, startBtn, restartBtn, board, gameFlow }
+  return { cells, grid, startBtn, restartBtn, board, gameFlow, disableAll }
 })();
 
 // Should each cell be a button when we do the UI later on (buttons help with accessibility)? Or just "clickable" (mouseclick, mousedown, etc) squares/divs?
