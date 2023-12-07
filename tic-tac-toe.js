@@ -6,6 +6,9 @@ const Gameboard = (function () {
     [null, null, null],
   ];
 
+  // Logic that represents whether the game is active or not. Pulled from gameController
+  let status = gameController.gameActive;
+
   // Displays the current state of the game board (in the console)
   const displayBoard = () => {
     for (let row of board) {
@@ -17,6 +20,7 @@ const Gameboard = (function () {
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
+    const gameState = Gameboard.status;
     for (let marker of markers) {
       switch (true) {
         case // Check the rows
@@ -42,10 +46,13 @@ const Gameboard = (function () {
         // Add logic to display "You Lose!" to the other player
         // Disable further interactions
       }
+
+      gameState = false;
     }
 
     // Check for draws
     console.log(`Tie game :/`); 
+    gameState = false;
     return false;
   }
 
@@ -70,15 +77,13 @@ const Gameboard = (function () {
     // }
   }
 
-  return { board, displayBoard, checkWin, makeMove };
+  return { board, status, displayBoard, checkWin, makeMove };
 })();
 
 // Function that controls game flow, state of the game's turns & player info
 function gameController () {
   const board = Gameboard();
 
-  // Add a 'let gameActive = false'. Will need to change this to 'true' in a startGame() function somewhere else under gameController
-  // Change 'gameActive' back to 'false' in the checkWin() function and link that function back to this one...somehow (declare variable = gameController.gamecurrent?)
   let gameActive = false;
   
   let currentPlayer = Players[0];
@@ -96,6 +101,18 @@ function gameController () {
   //   return { name, marker };
   // }
 
+  const startGame = () => {
+    // Randomly assigns 'X' or 'O' marker to players
+    currentPlayer = Math.random() < 0.5 ? 'X' : 'O';
+
+    // Displays assigned player markers
+    document.querySelector("label[for=player-1]").innerText = `Player 1 (${currentPlayer})`;
+    document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === 'X' ? 'O' : 'X'})`;
+
+    // Logic that starts the game. Change back to 'false' in the checkWin() function above and link that function back to this one...somehow
+    gameActive = true;
+  }
+
   const switchTurn = () => {
     currentPlayer = currentPlayer === Players[0] ? Players[1] : Players[0];
   };
@@ -111,7 +128,7 @@ function gameController () {
 
   // 'disableButtons' function that disables all buttons and the board itself once the game ends goes here
 
-  return { switchTurn, getCurrentPlayer }; // should 'board', 'currentPlayer', 'Players', 'disableButtons' and 'newRound' be added to this list as well?
+  return { gameActive, startGame, switchTurn, getCurrentPlayer }; // should 'board', 'currentPlayer', 'Players', 'disableButtons' and 'newRound' be added to this list as well?
 }
 
 // Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
