@@ -77,10 +77,11 @@ const Gameboard = (function () {
 function gameController () {
   const board = Gameboard();
 
-  // Change all instances of 'activePlayer' to 'currentPlayer'
   // Add a 'let gameActive = false'. Will need to change this to 'true' in a startGame() function somewhere else under gameController
-  // Change back to 'gameActive = false' in the checkWin() function and link that function back to this one...somehow (declare variable = gameController.gameActive?)
-  let activePlayer = Players[0];
+  // Change 'gameActive' back to 'false' in the checkWin() function and link that function back to this one...somehow (declare variable = gameController.gamecurrent?)
+  let gameActive = false;
+  
+  let currentPlayer = Players[0];
   
   // List of players. Might not need to be a factory function wrapped inside an IIFE (module pattern)? Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
   // Link name with HTML form element. Link marker with randomly assigned marker in startGame() function.
@@ -96,21 +97,21 @@ function gameController () {
   // }
 
   const switchTurn = () => {
-    activePlayer = activePlayer === Players[0] ? Players[1] : Players[0];
+    currentPlayer = currentPlayer === Players[0] ? Players[1] : Players[0];
   };
 
-  const getActivePlayer = () => activePlayer;
+  const getCurrentPlayer = () => currentPlayer;
 
   const newRound = () => {
     board.makeMove();
-    console.log(`${getActivePlayer().name}'s turn.`);
+    console.log(`${getCurrentPlayer().name}'s turn.`);
   }
 
   newRound();
 
   // 'disableButtons' function that disables all buttons and the board itself once the game ends goes here
 
-  return { switchTurn, getActivePlayer }; // should 'board', 'activePlayer', 'Players', 'disableButtons' and 'newRound' be added to this list as well?
+  return { switchTurn, getCurrentPlayer }; // should 'board', 'currentPlayer', 'Players', 'disableButtons' and 'newRound' be added to this list as well?
 }
 
 // Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
@@ -136,7 +137,7 @@ const displayController = (function () {
   //   markers[1].appendChild(markerO);
   // }
 
-  // activePlayer: new Players,
+  // currentPlayer: new Players,
   // gameResult: {
   //   winningPlayer: null,
   //   losingPlayer: null,
