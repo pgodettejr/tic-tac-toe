@@ -46,6 +46,8 @@ const Gameboard = (function () {
         // Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
         // Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
         // Disable further interactions
+
+        // Add default case here that will switch the players turn (switchTurn in gameController)
       }
 
       gameState = false;
@@ -57,7 +59,7 @@ const Gameboard = (function () {
     return false;
   }
 
-  // Update the board with the player's move
+  // Update the board with the player's move. May need to add logic to update the UI (displayController) with the current move.
   const makeMove = (row, col, markers) => {
     if (board[row][col] === null) {
       board[row][col] = markers;
@@ -111,7 +113,9 @@ function gameController () {
     document.querySelector("label[for=player-1]").innerText = `Player 1 (${currentPlayer})`;
     document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === 'X' ? 'O' : 'X'})`;
 
-    // Logic that starts the game. Change back to 'false' in the checkWin() function above and link that function back to this one...somehow
+    // Add some type of logic that starts the game here 
+
+    // Change back to 'false' in the checkWin() function above and link that function back to this one...somehow
     gameActive = true;
   }
 
