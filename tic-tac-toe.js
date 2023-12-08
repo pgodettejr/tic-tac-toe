@@ -88,7 +88,7 @@ const Gameboard = (function () {
     // }
   }
 
-  return { board, state, display, displayBoard, checkWin, makeMove };
+  return { board, state, display, displayBoard, checkWin, makeMove }; // Do we HAVE to return board, state & display? Can we keep them private function & still work outside?
 })();
 
 // Function that controls game flow, state of the game's turns & player info
@@ -158,7 +158,7 @@ function gameController () {
 
   newRound();
 
-  return { gameActive, startGame, restartGame, switchTurn, getCurrentPlayer }; // should 'board', 'currentPlayer', 'Players' & 'newRound' be added to this list?
+  return { gameActive, startGame, restartGame, switchTurn, getCurrentPlayer }; // should 'board', 'currentPlayer', 'Players' & 'newRound' be added or keep them private?
 }
 
 // Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
@@ -234,10 +234,13 @@ const displayController = (function () {
   //   return Gameboard;
   // }
 
-  return { cells, grid, startBtn, restartBtn, board, gameFlow, disableAll }
+  return { cells, grid, startBtn, restartBtn, board, gameFlow, disableAll } // See return comments above (what can we NOT declare & keep private without breaking the app)
 })();
 
 // Should each cell be a button when we do the UI later on (buttons help with accessibility)? Or just "clickable" (mouseclick, mousedown, etc) squares/divs?
+
+
+// Re-read 'Private Variables & Functions' and/or 'Prototypal Inheritance with Factories' from Factory Functions TOP lesson if needed regarding what we're returning in factories
 
 
 // Old and/or incorrect code
