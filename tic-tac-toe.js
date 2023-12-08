@@ -31,7 +31,7 @@ const Gameboard = (function () {
         (board[1][0] === marker && board[1][1] === marker && board[1][2] === marker) ||
         (board[2][0] === marker && board[2][1] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          // display.disableAll();
+          display.disableAll();
           return true;
 
         case // Check the columns
@@ -39,14 +39,14 @@ const Gameboard = (function () {
         (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
         (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          // display.disableAll();
+          display.disableAll();
           return true;
 
         case // Check the diagonals
         (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
         (board[2][0] === marker && board[1][1] === marker && board[0][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          // display.disableAll();
+          display.disableAll();
           return true;
 
         // Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
@@ -61,7 +61,7 @@ const Gameboard = (function () {
     // Check for draws
     console.log(`Tie game :/`); 
     gameState = false;
-    // display.disableAll();
+    display.disableAll();
     return false;
   }
 
@@ -76,7 +76,7 @@ const Gameboard = (function () {
       console.log(`Position: (${row},${col}) is already occupied. Try again.`);
     }
 
-    // Check winner example from RPS project. There was no separate disableButtons() function ever made though. Built-in JS method/function?
+    // Check winner example from RPS project. There was no separate disableButtons() function ever made though
     // if(playerScore === 5) {
     //   winner.textContent = "You Win!";
     //   disableButtons();
@@ -119,11 +119,16 @@ function gameController () {
     document.querySelector("label[for=player-1]").innerText = `Player 1 (${currentPlayer})`;
     document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === 'X' ? 'O' : 'X'})`;
 
-    // Add some type of logic that starts the game here 
+    // May need more logic that starts the game here (not just board.board by itself)
+    board.board = [
+      [null, null, null], 
+      [null, null, null], 
+      [null, null, null],
+    ];
 
     // Change back to 'false' in the checkWin() function above and link that function back to this one...somehow
     gameActive = true;
-  }
+  };
 
   // Restarts the game
   const restartGame = () => {
@@ -134,7 +139,7 @@ function gameController () {
     ];
     // Add logic here that clears the UI & resets any styling
     gameActive = false;
-  }
+  };
 
   // Switches player turns
   const switchTurn = () => {
@@ -168,10 +173,15 @@ const displayController = (function () {
   // UI access to gameController above
   const gameFlow = gameController();
 
+  // Checks to see if Player name input boxes are filled out
+  let names = document.getElementById('player-names').checkValidity();
+
   // 'Start' button functionality
   startBtn.addEventListener('click', () => {
-    gameFlow.startGame();
-    startBtn.setAttribute("disabled", "");
+    if (names) {
+      gameFlow.startGame();
+      startBtn.setAttribute("disabled", "");
+    }
   });
 
   // 'Restart' button functionality
@@ -187,12 +197,16 @@ const displayController = (function () {
       // gameFlow.newRound(); ?
     });
   });
-
-  // Disables all buttons & the board itself once the game ends
+  
+  // Disables the restart button & the board itself before game start & once the game ends
   const disableAll = () => {
-    button.setAttribute("disabled", "");
+    startBtn.removeAttribute("disabled");
+    restartBtn.setAttribute("disabled", "");
     cells.setAttribute("disabled", "");
   };
+
+  // Prevents interactivity with Restart and board cells until the game starts
+  disableAll();
 
   // const markerUI = Gameboard.markers; // Would need to move markers variable up the scope (see checkWin above)
   // for (const marker in markers) {
