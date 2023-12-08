@@ -19,7 +19,7 @@ const Gameboard = (function () {
     }
   };  
 
-  // Checks to see if a player has won the game
+  // Checks to see if a player has won the game. return statements within switch statement could be 'break' instead.
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
@@ -52,7 +52,9 @@ const Gameboard = (function () {
         // Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
         // Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
 
-        // Add default case here that will switch the players turn (switchTurn and/or newRound in gameController)
+        // Switch the players turn (may need to be newRound instead of switchTurn...or maybe both?)
+        default:
+          state.switchTurn();
       }
 
       gameState = false;
