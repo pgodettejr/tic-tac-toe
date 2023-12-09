@@ -195,8 +195,10 @@ const displayController = (function () {
   // Places player marker in a given cell once clicked
   cells.forEach((cell) => {
     cell.addEventListener('click', () => {
+      let addMarker = document.createTextNode(`${currentPlayer}`);
       board.makeMove();
-      // gameFlow.newRound(); ?
+      cell.appendChild(addMarker);
+      gameFlow.newRound();
     });
   });
   
