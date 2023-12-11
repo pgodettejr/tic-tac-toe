@@ -10,7 +10,7 @@ const Gameboard = (function () {
   let state = gameController();
 
   // Allows access to the UI
-  let display = displayController();
+  // let display = displayController(); <-- ReferenceError: Cannot access 'displayController' before initialization
 
   // Displays the current state of the game board (in the console)
   const displayBoard = () => {
@@ -31,7 +31,7 @@ const Gameboard = (function () {
         (board[1][0] === marker && board[1][1] === marker && board[1][2] === marker) ||
         (board[2][0] === marker && board[2][1] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          display.disableAll();
+          // display.disableAll();
           return true;
 
         case // Check the columns
@@ -39,14 +39,14 @@ const Gameboard = (function () {
         (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
         (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          display.disableAll();
+          // display.disableAll();
           return true;
 
         case // Check the diagonals
         (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
         (board[2][0] === marker && board[1][1] === marker && board[0][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          display.disableAll();
+          // display.disableAll();
           return true;
 
         // Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
@@ -88,12 +88,12 @@ const Gameboard = (function () {
     // }
   }
 
-  return { board, state, display, displayBoard, checkWin, makeMove }; // Do we HAVE to return board, state & display? Can we keep them private function & still work outside?
+  return { board, state, displayBoard, checkWin, makeMove }; // Do we HAVE to return board & state? Can we keep them as private function & still work outside?
 })();
 
 // Function that controls game flow, state of the game's turns & player info
 function gameController () {
-  const board = Gameboard();
+  // const board = Gameboard(); <-- ReferenceError: Cannot access 'Gameboard' before initialization
 
   let gameActive = false;
   
@@ -122,7 +122,7 @@ function gameController () {
     document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === 'X' ? 'O' : 'X'})`;
 
     // May need more logic that starts the game here (not just board.board by itself)
-    board.board = [
+    Gameboard.board = [
       [null, null, null], 
       [null, null, null], 
       [null, null, null],
@@ -134,7 +134,7 @@ function gameController () {
 
   // Restarts the game
   const restartGame = () => {
-    board.board = [
+    Gameboard.board = [
       [null, null, null], 
       [null, null, null], 
       [null, null, null],
@@ -151,14 +151,14 @@ function gameController () {
   const getCurrentPlayer = () => currentPlayer;
 
   // This might be redundant with other code and/or may need to be added to forEach method on the board cells below (in displayController) 
-  const newRound = () => {
-    board.makeMove();
-    console.log(`${getCurrentPlayer().name}'s turn.`);
-  }
+  // const newRound = () => {
+  //   Gameboard.makeMove();
+  //   console.log(`${getCurrentPlayer().name}'s turn.`);
+  // }
 
-  newRound();
+  // newRound();
 
-  return { gameActive, startGame, restartGame, switchTurn, getCurrentPlayer }; // should 'board', 'currentPlayer', 'Players' & 'newRound' be added or keep them private?
+  return { gameActive, startGame, restartGame, switchTurn, getCurrentPlayer }; // should 'currentPlayer', 'Players' & 'newRound' be added or keep them private?
 }
 
 // Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
@@ -169,7 +169,7 @@ const displayController = (function () {
   const startBtn = document.querySelector('.start');
   const restartBtn = document.querySelector('.restart');
 
-  // UI access to Gameboard above
+  // UI access to Gameboard above. TypeError: Gameboard is not a function?
   const board = Gameboard();
 
   // UI access to gameController above
@@ -192,13 +192,15 @@ const displayController = (function () {
     startBtn.setAttribute("disabled", "");
   });
 
-  // Places player marker in a given cell once clicked
+  // Places player marker in a given cell once clicked. Test out the 'for...of' method that's based on displayBoard function in Gameboard. Delete if it doesn't work.
   cells.forEach((cell) => {
     cell.addEventListener('click', () => {
-      let addMarker = document.createTextNode(`${currentPlayer}`);
-      board.makeMove();
-      cell.appendChild(addMarker);
-      gameFlow.newRound();
+      for (let row of board.board) {
+        let addMarker = document.createTextNode(`${currentPlayer}`);
+        board.makeMove(row);
+        cell.appendChild(addMarker);
+        // gameFlow.newRound(); <-- This might repeat. Choose between this and 'board.makeMove(row)'?
+      }
     });
   });
   
