@@ -204,7 +204,7 @@ const displayController = (function () {
     });
   });
   
-  // Disables the restart button & the board itself before game start & once the game ends
+  // Disables the restart button & the board itself before game start & once the game ends. Wrap everything in an if (gameFlow.gameActive === false) statement or put under forEach
   const disableAll = () => {
     startBtn.removeAttribute("disabled");
     restartBtn.setAttribute("disabled", "");
