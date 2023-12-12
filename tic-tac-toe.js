@@ -31,7 +31,7 @@ const Gameboard = (function () {
         (board[1][0] === marker && board[1][1] === marker && board[1][2] === marker) ||
         (board[2][0] === marker && board[2][1] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          // display.disableAll();
+          display.disableAll();
           return true;
 
         case // Check the columns
@@ -39,14 +39,14 @@ const Gameboard = (function () {
         (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
         (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          // display.disableAll();
+          display.disableAll();
           return true;
 
         case // Check the diagonals
         (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
         (board[2][0] === marker && board[1][1] === marker && board[0][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          // display.disableAll();
+          display.disableAll();
           return true;
 
         // Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
@@ -68,12 +68,12 @@ const Gameboard = (function () {
   }
 
   // Update the board with the player's move. May need to add logic to update the UI (displayController) with the current move.
-  const makeMove = (row, col, markers) => {
+  const makeMove = (row, col, marker) => {
     if (board[row][col] === null) {
-      board[row][col] = markers;
-      console.log(`Position: (${row},${col}) now occupied by ${markers}`);
+      board[row][col] = marker;
+      console.log(`Position: (${row},${col}) now occupied by ${marker}`);
       displayBoard();
-      checkWin(); // The whole reason why this function can use 'markers' as a parameter and access it from checkWin(). Closures, baby!
+      checkWin(); // The whole reason why this function can use 'marker' as a parameter and access it from checkWin(). Closures, baby!
     } else {
       console.log(`Position: (${row},${col}) is already occupied. Try again.`);
     }
@@ -91,7 +91,7 @@ const Gameboard = (function () {
   return { board, state, displayBoard, checkWin, makeMove }; // Do we HAVE to return board & state? Can we keep them as private function & still work outside?
 })();
 
-// Function that controls game flow, state of the game's turns & player info
+// Function that controls game flow, state of the game's turns & player info. Either make this an IIFE or move all functions in Gameboard to here & reorganize necessary code
 function gameController () {
   // const board = Gameboard(); <-- ReferenceError: Cannot access 'Gameboard' before initialization
 
@@ -192,51 +192,31 @@ const displayController = (function () {
     startBtn.setAttribute("disabled", "");
   });
 
-  // Places player marker in a given cell once clicked. Test out the 'for...of' method that's based on displayBoard function in Gameboard. Delete if it doesn't work.
-  cells.forEach((cell) => {
+  // Places player marker in a given cell once clicked, then switches player turn
+  cells.forEach((cell, index) => {
     cell.addEventListener('click', () => {
-      for (let row of board.board) {
-        let addMarker = document.createTextNode(`${currentPlayer}`);
-        board.makeMove(row);
-        cell.appendChild(addMarker);
-        // gameFlow.newRound(); <-- This might repeat. Choose between this and 'board.makeMove(row)'?
+      if (gameFlow.gameActive) {
+        const row = Math.floor(index / 3);
+        const col = index % 3;
+        board.makeMove(row, col, gameFlow.getCurrentPlayer().marker);
+        cell.setAttribute("disabled", "");
+        gameFlow.switchTurn();
+        console.log(`${getCurrentPlayer().name}'s turn.`);
       }
     });
   });
   
-  // Disables the restart button & the board itself before game start & once the game ends. Wrap everything in an if (gameFlow.gameActive === false) statement or put under forEach
+  // Disables the restart button & the board itself before game start & once the game ends
   const disableAll = () => {
-    startBtn.removeAttribute("disabled");
-    restartBtn.setAttribute("disabled", "");
-    cells.setAttribute("disabled", "");
+    if (gameFlow.gameActive === false) {
+      startBtn.removeAttribute("disabled");
+      restartBtn.setAttribute("disabled", "");
+      cells.setAttribute("disabled", "");
+    }
   };
 
   // Prevents interactivity with Restart and board cells until the game starts
   disableAll();
-
-  // const markerUI = Gameboard.markers; // Would need to move markers variable up the scope (see checkWin above)
-  // for (const marker in markers) {
-  //   const markers[0] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
-  //   const markers[1] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
-
-  //   markers[0].setAttribute("data-cell", "X");
-  //   markers[1].setAttribute("data-cell", "O");
-
-  //   const markerX = document.createTextNode(`${marker[0]}`);
-  //   const markerO = document.createTextNode(`${marker[1]}`);
-
-  //   markers[0].appendChild(markerX);
-  //   markers[1].appendChild(markerO);
-  // }
-
-  // currentPlayer: new Players,
-  // gameResult: {
-  //   winningPlayer: null,
-  //   losingPlayer: null,
-  // },
-  // boardState: function (Gameboard) {
-  //   return Gameboard;
-  // }
 
   return { cells, grid, startBtn, restartBtn, board, gameFlow, disableAll } // See return comments above (what can we NOT declare & keep private without breaking the app)
 })();
@@ -296,3 +276,38 @@ const displayController = (function () {
       // if (makeMove >= 9 && checkWin === false) { 
       //   console.log(`Tie game :/`); 
       // }
+
+// const markerUI = Gameboard.markers; // Would need to move markers variable up the scope (see checkWin above)
+  // for (const marker in markers) {
+  //   const markers[0] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
+  //   const markers[1] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
+
+  //   markers[0].setAttribute("data-cell", "X");
+  //   markers[1].setAttribute("data-cell", "O");
+
+  //   const markerX = document.createTextNode(`${marker[0]}`);
+  //   const markerO = document.createTextNode(`${marker[1]}`);
+
+  //   markers[0].appendChild(markerX);
+  //   markers[1].appendChild(markerO);
+  // }
+
+  // currentPlayer: new Players,
+  // gameResult: {
+  //   winningPlayer: null,
+  //   losingPlayer: null,
+  // },
+  // boardState: function (Gameboard) {
+  //   return Gameboard;
+  // }
+
+// Old logic for adding player assigned marker to the cell they clicked on
+// cells.forEach((cell) => {
+//   cell.addEventListener('click', () => {
+//     for (let row of board.board) {
+//       let addMarker = document.createTextNode(`${currentPlayer}`);
+//       board.makeMove(row);
+//       cell.appendChild(addMarker);
+//     }
+//   });
+// });
