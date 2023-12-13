@@ -91,7 +91,7 @@ const Gameboard = (function () {
   return { board, state, displayBoard, checkWin, makeMove }; // Do we HAVE to return board & state? Can we keep them as private function & still work outside?
 })();
 
-// Function that controls game flow, state of the game's turns & player info. Either make this an IIFE or move all functions in Gameboard to here & reorganize necessary code
+// Function that controls game flow, state of the game's turns & player info. Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work)
 function gameController () {
   // const board = Gameboard(); <-- ReferenceError: Cannot access 'Gameboard' before initialization
 
@@ -159,9 +159,9 @@ function gameController () {
   // newRound();
 
   return { gameActive, startGame, restartGame, switchTurn, getCurrentPlayer }; // should 'currentPlayer', 'Players' & 'newRound' be added or keep them private?
-}
+};
 
-// Object that controls game flow on the display (also an example for now). Should be a factory function wrapped inside an IIFE (module pattern)
+// Object that controls game flow on the display (also an example for now). Factory function wrapped inside an IIFE (module pattern)
 const displayController = (function () {
   // DOM for display elements
   const cells = document.querySelectorAll('.cell');
