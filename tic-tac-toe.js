@@ -19,7 +19,8 @@ const Gameboard = (function () {
     }
   };  
 
-  // Checks to see if a player has won the game. return statements within switch statement could be 'break' instead.
+  // Checks to see if a player has won the game. 
+  // OPTION: return statements within switch statement could be 'break' instead.
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
@@ -49,10 +50,11 @@ const Gameboard = (function () {
           display.disableAll();
           return true;
 
-        // Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
-        // Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
+        // TODO: Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
+        // TODO: Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
 
-        // Switch the players turn (may need to be newRound instead of switchTurn...or maybe both?)
+        // Switch the players turn 
+        // TODO: may need to be newRound instead of switchTurn...or maybe both?
         default:
           state.switchTurn();
       }
@@ -67,7 +69,8 @@ const Gameboard = (function () {
     return false;
   }
 
-  // Update the board with the player's move. May need to add logic to update the UI (displayController) with the current move.
+  // Update the board with the player's move
+  // TODO: May need to add logic to update the UI (displayController) with the current move.
   const makeMove = (row, col, marker) => {
     if (board[row][col] === null) {
       board[row][col] = marker;
@@ -88,10 +91,12 @@ const Gameboard = (function () {
     // }
   }
 
-  return { board, state, displayBoard, checkWin, makeMove }; // Do we HAVE to return board & state? Can we keep them as private function & still work outside?
+  // TODO: Do we HAVE to return board & state? Can we keep them as private function & still work outside?
+  return { board, state, displayBoard, checkWin, makeMove }; 
 })();
 
-// Function that controls game flow, state of the game's turns & player info. Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work)
+// Function that controls game flow, state of the game's turns & player info. 
+// TODO: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work)
 function gameController () {
   // const board = Gameboard(); <-- ReferenceError: Cannot access 'Gameboard' before initialization
 
@@ -99,15 +104,16 @@ function gameController () {
   
   let currentPlayer = Players[0];
   
-  // List of players. Might not need to be a factory function wrapped inside an IIFE (module pattern)? Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
-  // Link name with HTML form element. Link marker with randomly assigned marker in startGame() function.
+  // List of players. 
+  // TODO: Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
+  // TODO: Link name with HTML form element. Link marker with randomly assigned marker in startGame() function.
   function Players (name, marker) {
     this.name = name;
     this.marker = marker;
-    // const { name, marker } = Players; <-- possibly replace this.name & this.marker all at once?
+    // const { name, marker } = Players; <-- OPTION: possibly replace this.name & this.marker all at once?
   }
 
-  // Factory function variant of "Player" code above (creating a player)
+  // OPTION: Factory function variant of "Player" code above (creating a player)
   // function createPlayer (name, marker) {
   //   return { name, marker };
   // }
@@ -117,18 +123,19 @@ function gameController () {
     // Randomly assigns 'X' or 'O' marker to players
     currentPlayer = Math.random() < 0.5 ? 'X' : 'O';
 
-    // Displays assigned player markers. May need to be getElementById('player-1/2') instead
+    // Displays assigned player markers. 
+    // TODO: May need to be getElementById('player-1/2') instead
     document.querySelector("label[for=player-1]").innerText = `Player 1 (${currentPlayer})`;
     document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === 'X' ? 'O' : 'X'})`;
 
-    // May need more logic that starts the game here (not just board.board by itself)
+    // TODO: May need more logic that starts the game here (not just board.board by itself)
     Gameboard.board = [
       [null, null, null], 
       [null, null, null], 
       [null, null, null],
     ];
 
-    // Change back to 'false' in the checkWin() function above and link that function back to this one...somehow
+    // TODO: Change back to 'false' in the checkWin() function above and link that function back to this one...somehow
     gameActive = true;
   };
 
@@ -139,7 +146,8 @@ function gameController () {
       [null, null, null], 
       [null, null, null],
     ];
-    // Add logic here that clears the UI & resets any styling
+
+    // TODO: Add logic here that clears the UI & resets any styling
     gameActive = false;
   };
 
@@ -150,7 +158,7 @@ function gameController () {
 
   const getCurrentPlayer = () => currentPlayer;
 
-  // This might be redundant with other code and/or may need to be added to forEach method on the board cells below (in displayController) 
+  // TODO: This might be redundant with other code and/or may need to be added to forEach method on the board cells below (in displayController) 
   // const newRound = () => {
   //   Gameboard.makeMove();
   //   console.log(`${getCurrentPlayer().name}'s turn.`);
@@ -158,12 +166,14 @@ function gameController () {
 
   // newRound();
 
-  return { gameActive, startGame, restartGame, switchTurn, getCurrentPlayer }; // should 'currentPlayer', 'Players' & 'newRound' be added or keep them private?
+  // TODO: should 'currentPlayer', 'Players' & 'newRound' be added or keep them private?
+  return { gameActive, startGame, restartGame, switchTurn, getCurrentPlayer }; 
 };
 
 // Object that controls game flow on the display (also an example for now). Factory function wrapped inside an IIFE (module pattern)
 const displayController = (function () {
   // DOM for display elements
+  // TODO: May need to update 'cells' DOM to reflect as buttons, then update forEach method below accordingly
   const cells = document.querySelectorAll('.cell');
   const grid = document.querySelector('.board');
   const startBtn = document.querySelector('.start');
@@ -193,6 +203,7 @@ const displayController = (function () {
   });
 
   // Places player marker in a given cell once clicked, then switches player turn
+  // TODO: Update this method to reflect the cells as "Buttons" once the change is made in HTML
   cells.forEach((cell, index) => {
     cell.addEventListener('click', () => {
       if (gameFlow.gameActive) {
@@ -218,13 +229,12 @@ const displayController = (function () {
   // Prevents interactivity with Restart and board cells until the game starts
   disableAll();
 
-  return { cells, grid, startBtn, restartBtn, board, gameFlow, disableAll } // See return comments above (what can we NOT declare & keep private without breaking the app)
+  // TODO: See return comments above (what can we NOT declare & keep private without breaking the app)
+  return { cells, grid, startBtn, restartBtn, board, gameFlow, disableAll } 
 })();
 
-// Should each cell be a button when we do the UI later on (buttons help with accessibility)? Or just "clickable" (mouseclick, mousedown, etc) squares/divs?
 
-
-// Re-read 'Private Variables & Functions' and/or 'Prototypal Inheritance with Factories' from Factory Functions TOP lesson if needed regarding what we're returning in factories
+// TODO: Read 'Private Variables & Functions' &/or 'Prototypal Inheritance with Factories' from Factory Functions TOP lesson if needed regarding what we're returning in factories
 
 
 // Old and/or incorrect code
