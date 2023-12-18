@@ -152,6 +152,7 @@ function gameController () {
   };
 
   // Switches player turns
+  // TODO: Add logic that show the player's turn has switched (as innerHTML? in a DOM variable targeting a <span> or <h2> etc. Display markers in startGame is one way to do it)
   const switchTurn = () => {
     currentPlayer = currentPlayer === Players[0] ? Players[1] : Players[0];
   };
