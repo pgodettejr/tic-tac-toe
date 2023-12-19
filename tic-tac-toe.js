@@ -96,7 +96,7 @@ const Gameboard = (function () {
 })();
 
 // Function that controls game flow, state of the game's turns & player info. 
-// TODO: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work)
+// TODO: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work. Have no mentions of any Gameboard or displayController functions/methods/variables)
 function gameController () {
   // const board = Gameboard(); <-- ReferenceError: Cannot access 'Gameboard' before initialization
 
@@ -152,7 +152,7 @@ function gameController () {
   };
 
   // Switches player turns
-  // TODO: Add logic that show the player's turn has switched (as innerHTML? in a DOM variable targeting a <span> or <h2> etc. Display markers in startGame is one way to do it)
+  // TODO: Add logic that show the player's turn has switched (as textContent? in a DOM variable targeting a <span> or <h2> etc. Display markers in startGame is one way to do it)
   const switchTurn = () => {
     currentPlayer = currentPlayer === Players[0] ? Players[1] : Players[0];
   };
@@ -210,7 +210,7 @@ const displayController = (function () {
       if (gameFlow.gameActive) {
         const row = Math.floor(index / 3);
         const col = index % 3;
-        board.makeMove(row, col, gameFlow.getCurrentPlayer().marker);
+        board.makeMove(row, col, gameFlow.getCurrentPlayer().marker); // OPTION: cells[0].textContent = (Game)board.board;
         cell.setAttribute("disabled", "");
         gameFlow.switchTurn();
         console.log(`${getCurrentPlayer().name}'s turn.`);
