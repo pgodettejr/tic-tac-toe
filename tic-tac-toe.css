@@ -16,6 +16,10 @@ body {
   margin-inline: auto;
 }
 
+h1 {
+  text-align: center;
+}
+
 /* Player 1 & 2 section styling goes here - styling starts at '.players' & ends at '.form-row input:focus' */
 .players {
   display: flex;
