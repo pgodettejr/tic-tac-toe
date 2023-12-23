@@ -96,7 +96,8 @@ const Gameboard = (function () {
 })();
 
 // Function that controls game flow, state of the game's turns & player info. 
-// TODO: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work. Have no mentions of any Gameboard or displayController functions/methods/variables)
+// TODO 1: Test ChatGPT solution first (move this entire function to top of file)
+// TODO 2: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work. Have no mentions of any Gameboard or displayController functions/methods/variables)
 function gameController () {
   // const board = Gameboard(); <-- ReferenceError: Cannot access 'Gameboard' before initialization
 
@@ -147,7 +148,7 @@ function gameController () {
       [null, null, null],
     ];
 
-    // TODO: Add logic here that clears the UI & resets any styling
+    // TODO: Add logic here that clears the UI & resets any styling. location.reload()? Read up on this. Might not even need Gameboard.board above this line if we use it.
     gameActive = false;
   };
 
@@ -197,7 +198,7 @@ const displayController = (function () {
     }
   });
 
-  // 'Restart' button functionality
+  // 'Restart' button functionality. If we use location.reload() in our restartGame function above, simply replace () on addEventListener with restartGame & delete code below
   restartBtn.addEventListener('click', () => {
     gameFlow.restartGame();
     startBtn.setAttribute("disabled", "");
