@@ -204,10 +204,12 @@ const displayController = (function () {
       if (gameFlow.gameActive) {
         const row = Math.floor(index / 3);
         const col = index % 3;
-        Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker); // OPTION: cells[0].textContent = (Game)board.board;
+        Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker); // OPTION: cells[0].textContent = (Game)board.board; <-- Erase row and col above as well if we use this?
         cell.setAttribute("disabled", "");
         gameFlow.switchTurn();
         console.log(`${getCurrentPlayer().name}'s turn.`);
+      } else {
+        console.log('Literally none of this works. Why tho?');
       }
     });
   });
