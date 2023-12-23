@@ -9,9 +9,6 @@ const Gameboard = (function () {
   // Allows access to the gameController function that controls game flow
   let state = gameController();
 
-  // Allows access to the UI
-  // let display = displayController(); <-- ReferenceError: Cannot access 'displayController' before initialization
-
   // Displays the current state of the game board (in the console)
   const displayBoard = () => {
     for (let row of board) {
@@ -125,7 +122,6 @@ function gameController () {
     currentPlayer = Math.random() < 0.5 ? 'X' : 'O';
 
     // Displays assigned player markers. 
-    // TODO: May need to be getElementById('player-1/2') instead. Does this have to be appended as a child or 'sibling' afterwards or can the label text itself simply be updated?
     document.querySelector("label[for=player-1]").innerText = `Player 1 (${currentPlayer})`;
     document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === 'X' ? 'O' : 'X'})`;
 
@@ -138,7 +134,6 @@ function gameController () {
 
     // TODO: Change back to 'false' in the checkWin() function above and link that function back to this one...somehow
     gameActive = true;
-    console.log('Does startGame work on button click or nah?');
   };
 
   // Restarts the game
@@ -182,8 +177,6 @@ const displayController = (function () {
   const startBtn = document.querySelector('.start');
   const restartBtn = document.querySelector('.restart');
 
-  // const board = Gameboard(); <-- UI access to Gameboard above. TypeError: Gameboard is not a function?
-
   // UI access to gameController above
   const gameFlow = gameController();
 
@@ -195,9 +188,6 @@ const displayController = (function () {
       e.preventDefault();
       gameFlow.startGame();
       startBtn.setAttribute("disabled", "");
-      console.log('Does this work or nah?');
-    } else {
-      console.log('It did not work!');
     }
   });
 
