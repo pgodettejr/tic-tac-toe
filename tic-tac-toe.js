@@ -125,7 +125,7 @@ function gameController () {
     currentPlayer = Math.random() < 0.5 ? 'X' : 'O';
 
     // Displays assigned player markers. 
-    // TODO: May need to be getElementById('player-1/2') instead
+    // TODO: May need to be getElementById('player-1/2') instead. Does this have to be appended as a child or 'sibling' afterwards or can the label text itself simply be updated?
     document.querySelector("label[for=player-1]").innerText = `Player 1 (${currentPlayer})`;
     document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === 'X' ? 'O' : 'X'})`;
 
@@ -138,6 +138,7 @@ function gameController () {
 
     // TODO: Change back to 'false' in the checkWin() function above and link that function back to this one...somehow
     gameActive = true;
+    console.log('Does startGame work on button click or nah?');
   };
 
   // Restarts the game
@@ -181,8 +182,7 @@ const displayController = (function () {
   const startBtn = document.querySelector('.start');
   const restartBtn = document.querySelector('.restart');
 
-  // UI access to Gameboard above. TypeError: Gameboard is not a function?
-  const board = Gameboard();
+  // const board = Gameboard(); <-- UI access to Gameboard above. TypeError: Gameboard is not a function?
 
   // UI access to gameController above
   const gameFlow = gameController();
@@ -195,6 +195,7 @@ const displayController = (function () {
     if (names) {
       gameFlow.startGame();
       startBtn.setAttribute("disabled", "");
+      console.log('Does this work or nah?');
     }
   });
 
@@ -211,7 +212,7 @@ const displayController = (function () {
       if (gameFlow.gameActive) {
         const row = Math.floor(index / 3);
         const col = index % 3;
-        board.makeMove(row, col, gameFlow.getCurrentPlayer().marker); // OPTION: cells[0].textContent = (Game)board.board;
+        Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker); // OPTION: cells[0].textContent = (Game)board.board;
         cell.setAttribute("disabled", "");
         gameFlow.switchTurn();
         console.log(`${getCurrentPlayer().name}'s turn.`);
@@ -224,7 +225,7 @@ const displayController = (function () {
     if (gameFlow.gameActive === false) {
       startBtn.removeAttribute("disabled");
       restartBtn.setAttribute("disabled", "");
-      cells.setAttribute("disabled", "");
+      cells.forEach(cell => cell.setAttribute("disabled", ""));
     }
   };
 
@@ -232,7 +233,7 @@ const displayController = (function () {
   disableAll();
 
   // TODO: See return comments above (what can we NOT declare & keep private without breaking the app)
-  return { cells, grid, startBtn, restartBtn, board, gameFlow, disableAll } 
+  return { cells, grid, startBtn, restartBtn, gameFlow, disableAll } 
 })();
 
 
