@@ -187,15 +187,17 @@ const displayController = (function () {
   // UI access to gameController above
   const gameFlow = gameController();
 
-  // Checks to see if Player name input boxes are filled out
-  let names = document.getElementById('player-names').checkValidity();
-
   // 'Start' button functionality
-  startBtn.addEventListener('click', () => {
+  startBtn.addEventListener('click', (e) => {
+    // Checks to see if Player name input boxes are filled out
+    let names = document.getElementById('player-names').checkValidity();
     if (names) {
+      e.preventDefault();
       gameFlow.startGame();
       startBtn.setAttribute("disabled", "");
       console.log('Does this work or nah?');
+    } else {
+      console.log('It did not work!');
     }
   });
 
