@@ -188,6 +188,7 @@ const displayController = (function () {
       e.preventDefault();
       gameFlow.startGame();
       startBtn.setAttribute("disabled", "");
+      restartBtn.removeAttribute("disabled");
     }
   });
 
@@ -199,12 +200,13 @@ const displayController = (function () {
 
   // Places player marker in a given cell once clicked, then switches player turn
   // TODO: Update this method to reflect the cells as "Buttons" once the change is made in HTML
-  cells.forEach((cell, index) => {
+  cells.forEach(cell => {
     cell.addEventListener('click', () => {
       if (gameFlow.gameActive) {
-        const row = Math.floor(index / 3);
-        const col = index % 3;
-        Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker); // OPTION: cells[0].textContent = (Game)board.board; <-- Erase row and col above as well if we use this?
+        // const row = Math.floor(index / 3);
+        // const col = index % 3;
+        // Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker); OPTION: cells[0].textContent = (Game)board.board; <-- Erase row and col above as well if we use this?
+        cells[0].textContent = Gameboard.board;
         cell.setAttribute("disabled", "");
         gameFlow.switchTurn();
         console.log(`${getCurrentPlayer().name}'s turn.`);
