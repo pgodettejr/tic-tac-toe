@@ -1,4 +1,5 @@
 // Game board example object (3 x 3 array). Factory function wrapped inside an IIFE (module pattern). Could make board into an object with 3 properties, each with 3-index arrays
+// TODO: Potentially delete all mentions of "gameActive" and "gameState" in the entire codebase (not just here in Gameboard)
 const Gameboard = (function () {
   let board = [
     [null, null, null], 
@@ -6,10 +7,10 @@ const Gameboard = (function () {
     [null, null, null],
   ];
 
-  // Allows access to the gameController function that controls game flow
+  // Allows access to the gameController function that controls game flow. Might not need this: if we don't, change all instances of "state" to just "gameController"
   let state = gameController();
 
-  // Displays the current state of the game board (in the console)
+  // Displays the current state of the game board (in the console). Marker currently showing as "undefined"
   const displayBoard = () => {
     for (let row of board) {
       console.log(row);
@@ -29,7 +30,7 @@ const Gameboard = (function () {
         (board[1][0] === marker && board[1][1] === marker && board[1][2] === marker) ||
         (board[2][0] === marker && board[2][1] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          display.disableAll();
+          displayController.disableAll();
           return true;
 
         case // Check the columns
@@ -37,14 +38,14 @@ const Gameboard = (function () {
         (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
         (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          display.disableAll();
+          displayController.disableAll();
           return true;
 
         case // Check the diagonals
         (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
         (board[2][0] === marker && board[1][1] === marker && board[0][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          display.disableAll();
+          displayController.disableAll();
           return true;
 
         // TODO: Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
@@ -60,13 +61,15 @@ const Gameboard = (function () {
     }
 
     // Check for draws
+    // TODO: Potentially move this under checkWin as an additional case and rewrite the code to reflect as such (e.g: if makeMove >= 9 etc.)
     console.log(`Tie game :/`); 
     gameState = false;
-    display.disableAll();
+    displayController.disableAll();
     return false;
   }
 
   // Update the board with the player's move
+  // TODO: Marker showing as undefined when cell in the UI is clicked (see the rest of the code)
   // TODO: May need to add logic to update the UI (displayController) with the current move.
   const makeMove = (row, col, marker) => {
     if (board[row][col] === null) {
@@ -105,6 +108,7 @@ function gameController () {
   // List of players. 
   // TODO: Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
   // TODO: Link name with HTML form element. Link marker with randomly assigned marker in startGame() function.
+  // TODO: Marker is showing as "undefined" although debugging never got to this part of the code?
   function Players (name, marker) {
     this.name = name;
     this.marker = marker;
@@ -118,12 +122,13 @@ function gameController () {
 
   // Starts the game
   const startGame = () => {
-    // Randomly assigns 'X' or 'O' marker to players
-    currentPlayer = Math.random() < 0.5 ? 'X' : 'O';
+    // Randomly assigns 'X' or 'O' marker to players.
+    // TODO: Simply changing quotes to solve undefined marker error didn't work. Try to change 'X' and 'O' to Gameboard.checkWin.marker(s)[0] & [1] respectively.
+    currentPlayer = Math.random() < 0.5 ? "X" : "O";
 
     // Displays assigned player markers. 
     document.querySelector("label[for=player-1]").innerText = `Player 1 (${currentPlayer})`;
-    document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === 'X' ? 'O' : 'X'})`;
+    document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === "X" ? "O" : "X"})`;
 
     // TODO: May need more logic that starts the game here (not just board.board by itself)
     Gameboard.board = [
@@ -189,6 +194,7 @@ const displayController = (function () {
       gameFlow.startGame();
       startBtn.setAttribute("disabled", "");
       restartBtn.removeAttribute("disabled");
+      cells.forEach(cell => cell.removeAttribute("disabled"));
     }
   });
 
@@ -199,20 +205,18 @@ const displayController = (function () {
   });
 
   // Places player marker in a given cell once clicked, then switches player turn
-  // TODO: Update this method to reflect the cells as "Buttons" once the change is made in HTML
-  cells.forEach(cell => {
+  // TODO: gameFlow.getCurrentPlayer().marker is showing as "undefined", meaning the marker itself is "undefined"
+  // OPTION: Update this method to reflect the cells as "Buttons" once the change is made in HTML?
+  cells.forEach((cell, index) => {
     cell.addEventListener('click', () => {
-      if (gameFlow.gameActive) {
-        // const row = Math.floor(index / 3);
-        // const col = index % 3;
-        // Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker); OPTION: cells[0].textContent = (Game)board.board; <-- Erase row and col above as well if we use this?
-        cells[0].textContent = Gameboard.board;
-        cell.setAttribute("disabled", "");
-        gameFlow.switchTurn();
-        console.log(`${getCurrentPlayer().name}'s turn.`);
-      } else {
-        console.log('Literally none of this works. Why tho?');
-      }
+      const row = Math.floor(index / 3);
+      const col = index % 3;
+      Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker);
+      // cells[0].textContent = Gameboard.board; <-- This just puts the entire array into the top left cell as commas
+      cell.setAttribute("disabled", "");
+      gameFlow.switchTurn();
+      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`);
+      // console.log('Literally none of this works. Why tho?');
     });
   });
   
