@@ -7,6 +7,9 @@ const Gameboard = (function () {
     [null, null, null],
   ];
 
+  // Player markers
+  // const markers = ["X", "O"];
+
   // Allows access to the gameController function that controls game flow. Might not need this: if we don't, change all instances of "state" to just "gameController"
   let state = gameController();
 
@@ -107,8 +110,12 @@ function gameController () {
   
   // List of players. 
   // TODO: Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
-  // TODO: Link name with HTML form element. Link marker with randomly assigned marker in startGame() function.
-  // TODO: Marker is showing as "undefined" although debugging never got to this part of the code?
+  // TODO: Link name with HTML form element. 
+
+  // TODO: Link marker with randomly assigned marker in startGame() function.
+  // ATTEMPT #1: Changing the value 'marker' to 'Gameboard(.checkWin).markers'
+
+  // TODO: Marker is currently showing as "undefined" although debugging never got to this part of the code?
   function Players (name, marker) {
     this.name = name;
     this.marker = marker;
@@ -122,8 +129,11 @@ function gameController () {
 
   // Starts the game
   const startGame = () => {
-    // Randomly assigns 'X' or 'O' marker to players.
-    // TODO: Simply changing quotes to solve undefined marker error didn't work. Try to change 'X' and 'O' to Gameboard.checkWin.marker(s)[0] & [1] respectively.
+    // Randomly assigns 'X' or 'O' marker to players. Possibly delete this feature entirely
+
+    // TODO: Fix markers showing as "undefined" (spills over into cell buttons when they are clicked. see code below)
+    // ATTEMPT #1: Simply changing quotes to solve undefined marker error didn't work
+    // ATTEMPT #2: Change 'X' and 'O' to 'Gameboard(.checkWin).marker(s)[0][1]' respectively.
     currentPlayer = Math.random() < 0.5 ? "X" : "O";
 
     // Displays assigned player markers. 
