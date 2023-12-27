@@ -11,7 +11,7 @@ const Gameboard = (function () {
   // const markers = ["X", "O"];
 
   // Allows access to the gameController function that controls game flow. Might not need this: if we don't, change all instances of "state" to just "gameController"
-  let state = gameController();
+  // let state = gameController();
 
   // Displays the current state of the game board (in the console). Marker currently showing as "undefined"
   const displayBoard = () => {
@@ -25,7 +25,6 @@ const Gameboard = (function () {
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
-    let gameState = state.gameActive;
     for (let marker of markers) {
       switch (true) {
         case // Check the rows
@@ -51,24 +50,22 @@ const Gameboard = (function () {
           displayController.disableAll();
           return true;
 
+        case // Check for draws
+        // TODO: Potentially move this back outside of the switch statement if it doesn't work. return goes back to 'false'. not sure if 'makeMove >= 9' is the best way to write
+        (makeMove >= 9):
+          console.log(`Tie game :/`); 
+          displayController.disableAll();
+          return true;
+
         // TODO: Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
         // TODO: Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
 
         // Switch the players turn 
         // TODO: may need to be newRound instead of switchTurn...or maybe both?
         default:
-          state.switchTurn();
+          gameController.switchTurn(); // Uncaught TypeError: gameController.switchTurn is not a function. Re-enable 'state' variable above?
       }
-
-      gameState = false;
     }
-
-    // Check for draws
-    // TODO: Potentially move this under checkWin as an additional case and rewrite the code to reflect as such (e.g: if makeMove >= 9 etc.)
-    console.log(`Tie game :/`); 
-    gameState = false;
-    displayController.disableAll();
-    return false;
   }
 
   // Update the board with the player's move
@@ -95,17 +92,13 @@ const Gameboard = (function () {
   }
 
   // TODO: Do we HAVE to return board & state? Can we keep them as private function & still work outside?
-  return { board, state, displayBoard, checkWin, makeMove }; 
+  return { board, displayBoard, checkWin, makeMove }; 
 })();
 
 // Function that controls game flow, state of the game's turns & player info. 
 // TODO 1: Test ChatGPT solution first (move this entire function to top of file)
 // TODO 2: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work. Have no mentions of any Gameboard or displayController functions/methods/variables)
 function gameController () {
-  // const board = Gameboard(); <-- ReferenceError: Cannot access 'Gameboard' before initialization
-
-  let gameActive = false;
-  
   let currentPlayer = Players[0];
   
   // List of players. 
@@ -140,15 +133,12 @@ function gameController () {
     document.querySelector("label[for=player-1]").innerText = `Player 1 (${currentPlayer})`;
     document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === "X" ? "O" : "X"})`;
 
-    // TODO: May need more logic that starts the game here (not just board.board by itself)
+    // TODO: Need more logic that starts the game here. Set Player 1's turn so they can make a move?
     Gameboard.board = [
       [null, null, null], 
       [null, null, null], 
       [null, null, null],
     ];
-
-    // TODO: Change back to 'false' in the checkWin() function above and link that function back to this one...somehow
-    gameActive = true;
   };
 
   // Restarts the game
@@ -160,7 +150,6 @@ function gameController () {
     ];
 
     // TODO: Add logic here that clears the UI & resets any styling. location.reload()? Read up on this. Might not even need Gameboard.board above this line if we use it.
-    gameActive = false;
   };
 
   // Switches player turns
@@ -180,7 +169,7 @@ function gameController () {
   // newRound();
 
   // TODO: should 'currentPlayer', 'Players' & 'newRound' be added or keep them private?
-  return { gameActive, startGame, restartGame, switchTurn, getCurrentPlayer }; 
+  return { startGame, restartGame, switchTurn, getCurrentPlayer }; 
 };
 
 // Object that controls game flow on the display (also an example for now). Factory function wrapped inside an IIFE (module pattern)
@@ -226,20 +215,17 @@ const displayController = (function () {
       cell.setAttribute("disabled", "");
       gameFlow.switchTurn();
       console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`);
-      // console.log('Literally none of this works. Why tho?');
     });
   });
   
   // Disables the restart button & the board itself before game start & once the game ends
   const disableAll = () => {
-    if (gameFlow.gameActive === false) {
-      startBtn.removeAttribute("disabled");
-      restartBtn.setAttribute("disabled", "");
-      cells.forEach(cell => cell.setAttribute("disabled", ""));
-    }
+    startBtn.removeAttribute("disabled");
+    restartBtn.setAttribute("disabled", "");
+    cells.forEach(cell => cell.setAttribute("disabled", ""));
   };
 
-  // Prevents interactivity with Restart and board cells until the game starts
+  // Prevents interactivity with Restart and board cells until the game starts (Start button is pressed)
   disableAll();
 
   // TODO: See return comments above (what can we NOT declare & keep private without breaking the app)
