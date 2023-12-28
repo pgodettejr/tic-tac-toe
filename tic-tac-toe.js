@@ -1,5 +1,4 @@
 // Game board example object (3 x 3 array). Factory function wrapped inside an IIFE (module pattern). Could make board into an object with 3 properties, each with 3-index arrays
-// TODO: Potentially delete all mentions of "gameActive" and "gameState" in the entire codebase (not just here in Gameboard)
 const Gameboard = (function () {
   let board = [
     [null, null, null], 
