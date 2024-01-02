@@ -6,7 +6,7 @@ const Gameboard = (function () {
     [null, null, null],
   ];
 
-  // Player markers
+  // Player markers (attempted to move this from checkWin to target markers in displayController better but didn't work)
   // const markers = ["X", "O"];
 
   // Allows access to the gameController function that controls game flow. Might not need this: if we don't, change all instances of "state" to just "gameController"
@@ -62,7 +62,7 @@ const Gameboard = (function () {
         // Switch the players turn 
         // TODO: may need to be newRound instead of switchTurn...or maybe both?
         default:
-          gameController.switchTurn(); // Uncaught TypeError: gameController.switchTurn is not a function. Re-enable 'state' variable above?
+          gameFlow.switchTurn(); // Uncaught TypeError: gameController.switchTurn is not a function. Re-enable 'state' variable above?
       }
     }
   }
@@ -106,6 +106,7 @@ function gameController () {
 
   // TODO: Link marker with randomly assigned marker in startGame() function.
   // ATTEMPT #1: Changing the value 'marker' to 'Gameboard(.checkWin).markers'
+  // let marker = Gameboard.checkWin.markers
 
   // TODO: Marker is currently showing as "undefined" although debugging never got to this part of the code?
   function Players (name, marker) {
@@ -124,7 +125,7 @@ function gameController () {
     // Randomly assigns 'X' or 'O' marker to players. Possibly delete this feature entirely
 
     // TODO: Fix markers showing as "undefined" (spills over into cell buttons when they are clicked. see code below)
-    // ATTEMPT #1: Simply changing quotes to solve undefined marker error didn't work
+    // ATTEMPT #1: Simply changing from single to double quotes
     // ATTEMPT #2: Change 'X' and 'O' to 'Gameboard(.checkWin).marker(s)[0][1]' respectively.
     currentPlayer = Math.random() < 0.5 ? "X" : "O";
 
@@ -132,7 +133,8 @@ function gameController () {
     document.querySelector("label[for=player-1]").innerText = `Player 1 (${currentPlayer})`;
     document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === "X" ? "O" : "X"})`;
 
-    // TODO: Need more logic that starts the game here. Set Player 1's turn so they can make a move?
+    // TODO: Need more logic that starts the game here. Set Player 1's turn so they can make a move? 
+    // Do we even need Gameboard.board if it's empty anyway when the page loads and the start button is disabled in any other scenario or state?
     Gameboard.board = [
       [null, null, null], 
       [null, null, null], 
@@ -157,6 +159,7 @@ function gameController () {
     currentPlayer = currentPlayer === Players[0] ? Players[1] : Players[0];
   };
 
+  // Gets the current player (for use in other functions outside of gameController)
   const getCurrentPlayer = () => currentPlayer;
 
   // TODO: This might be redundant with other code and/or may need to be added to forEach method on the board cells below (in displayController) 
@@ -224,7 +227,7 @@ const displayController = (function () {
     cells.forEach(cell => cell.setAttribute("disabled", ""));
   };
 
-  // Prevents interactivity with Restart and board cells until the game starts (Start button is pressed)
+  // Prevents interactivity with Restart and board cells until the game starts (when the Start button is pressed)
   disableAll();
 
   // TODO: See return comments above (what can we NOT declare & keep private without breaking the app)
