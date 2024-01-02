@@ -10,7 +10,7 @@ const Gameboard = (function () {
   // const markers = ["X", "O"];
 
   // Allows access to the gameController function that controls game flow. Might not need this: if we don't, change all instances of "state" to just "gameController"
-  // let state = gameController();
+  let state = gameController();
 
   // Displays the current state of the game board (in the console). Marker currently showing as "undefined"
   const displayBoard = () => {
@@ -62,7 +62,9 @@ const Gameboard = (function () {
         // Switch the players turn 
         // TODO: may need to be newRound instead of switchTurn...or maybe both?
         default:
-          gameFlow.switchTurn(); // Uncaught TypeError: gameController.switchTurn is not a function. Re-enable 'state' variable above?
+          // Uncaught TypeError: gameController.switchTurn is not a function.
+          // Uncaught ReferenceError: gameFlow is not defined
+          state.switchTurn(); // Re-enable 'state' variable above?
       }
     }
   }
@@ -91,7 +93,7 @@ const Gameboard = (function () {
   }
 
   // TODO: Do we HAVE to return board & state? Can we keep them as private function & still work outside?
-  return { board, displayBoard, checkWin, makeMove }; 
+  return { board, state, displayBoard, checkWin, makeMove }; 
 })();
 
 // Function that controls game flow, state of the game's turns & player info. 
@@ -206,17 +208,16 @@ const displayController = (function () {
   });
 
   // Places player marker in a given cell once clicked, then switches player turn
-  // TODO: gameFlow.getCurrentPlayer().marker is showing as "undefined", meaning the marker itself is "undefined"
   // OPTION: Update this method to reflect the cells as "Buttons" once the change is made in HTML?
   cells.forEach((cell, index) => {
     cell.addEventListener('click', () => {
       const row = Math.floor(index / 3);
       const col = index % 3;
-      Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker);
+      Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker); // TODO: gameFlow.getCurrentPlayer().marker showing as "undefined", meaning the marker itself is undefined
       // cells[0].textContent = Gameboard.board; <-- This just puts the entire array into the top left cell as commas
       cell.setAttribute("disabled", "");
       gameFlow.switchTurn();
-      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`);
+      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`); // Uncaught TypeError: Cannot read properties of undefined (reading 'name') <-- loops several times before this
     });
   });
   
