@@ -102,7 +102,6 @@ const Gameboard = (function () {
 function gameController () {
   let currentPlayer = Players[0];
   
-  // List of players. 
   // TODO: Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
   // TODO: Link name with HTML form element. 
 
@@ -110,17 +109,23 @@ function gameController () {
   // ATTEMPT #1: Changing the value 'marker' to 'Gameboard(.checkWin).markers'
   // let marker = Gameboard.checkWin.markers
 
-  // TODO: Marker is currently showing as "undefined" although debugging never got to this part of the code?
+  // ATTEMPT #2: Factory function variant of "Player" code below (creating a player) & moved this outside of gameController to the global scope
+  // function createPlayer (name) {
+  //   const marker = Math.random() < 0.5 ? "X" : "O"; 
+  //
+  //   return { name, marker };
+  // };
+
+  // const player1 = createPlayer("Player 1");
+  // const player2 = createPlayer("Player 2");
+
+  // List of players. 
+  // TODO: Marker is currently showing as "undefined" although debugging never got to this part of the code? (see attempts just above)
   function Players (name, marker) {
     this.name = name;
-    this.marker = marker;
+    this.marker = marker; // Simply replacing 'marker' here with 'null' doesn't seem to work (was going to do an 'if (Players.marker === null)' statement under startGame if so)
     // const { name, marker } = Players; <-- OPTION: possibly replace this.name & this.marker all at once?
   }
-
-  // OPTION: Factory function variant of "Player" code above (creating a player)
-  // function createPlayer (name, marker) {
-  //   return { name, marker };
-  // }
 
   // Starts the game
   const startGame = () => {
@@ -214,7 +219,7 @@ const displayController = (function () {
       const row = Math.floor(index / 3);
       const col = index % 3;
       Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker); // TODO: gameFlow.getCurrentPlayer().marker showing as "undefined", meaning the marker itself is undefined
-      // cells[0].textContent = Gameboard.board; <-- This just puts the entire array into the top left cell as commas
+      // cells[0].textContent = Gameboard.board; <-- This puts the entire array into the top left cell as commas. Possibly 'cell.textContent = Gameboard.board' after marker fix
       cell.setAttribute("disabled", "");
       gameFlow.switchTurn();
       console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`); // Uncaught TypeError: Cannot read properties of undefined (reading 'name') <-- loops several times before this
