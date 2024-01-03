@@ -9,10 +9,10 @@ const Gameboard = (function () {
   // Player markers (attempted to move this from checkWin to target markers in displayController better but didn't work)
   // const markers = ["X", "O"];
 
-  // Allows access to the gameController function that controls game flow. Might not need this: if we don't, change all instances of "state" to just "gameController"
+  // Allows access to the gameController function that controls game flow
   let state = gameController();
 
-  // Displays the current state of the game board (in the console). Marker currently showing as "undefined"
+  // Displays the current state of the game board (in the console)
   const displayBoard = () => {
     for (let row of board) {
       console.log(row);
@@ -62,15 +62,12 @@ const Gameboard = (function () {
         // Switch the players turn 
         // TODO: may need to be newRound instead of switchTurn...or maybe both?
         default:
-          // Uncaught TypeError: gameController.switchTurn is not a function.
-          // Uncaught ReferenceError: gameFlow is not defined
-          state.switchTurn(); // Re-enable 'state' variable above?
+          state.switchTurn();
       }
     }
   }
 
   // Update the board with the player's move
-  // TODO: Marker showing as undefined when cell in the UI is clicked (see the rest of the code)
   // TODO: May need to add logic to update the UI (displayController) with the current move.
   const makeMove = (row, col, marker) => {
     if (board[row][col] === null) {
@@ -100,54 +97,22 @@ const Gameboard = (function () {
 // TODO 1: Test ChatGPT solution first (move this entire function to top of file)
 // TODO 2: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work. Have no mentions of any Gameboard or displayController functions/methods/variables)
 function gameController () {
-  let currentPlayer = Players[0];
-  
-  // TODO: Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
-  // TODO: Link name with HTML form element. 
+  let player1 = document.getElementById('player-1').value;
+  let player2 = document.getElementById('player-2').value; 
 
-  // TODO: Link marker with randomly assigned marker in startGame() function.
-  // ATTEMPT #1: Changing the value 'marker' to 'Gameboard(.checkWin).markers'
-  // let marker = Gameboard.checkWin.markers
+  // List of players.
+  const players = [
+    {
+      name: player1,
+      marker: "X"
+    },
+    {
+      name: player2,
+      marker: "O"
+    }
+  ];
 
-  // ATTEMPT #2: Factory function variant of "Player" code below (creating a player) & moved this outside of gameController to the global scope
-  // function createPlayer (name) {
-  //   const marker = Math.random() < 0.5 ? "X" : "O"; 
-  //
-  //   return { name, marker };
-  // };
-
-  // const player1 = createPlayer("Player 1");
-  // const player2 = createPlayer("Player 2");
-
-  // List of players. 
-  // TODO: Marker is currently showing as "undefined" although debugging never got to this part of the code? (see attempts just above)
-  function Players (name, marker) {
-    this.name = name;
-    this.marker = marker; // Simply replacing 'marker' here with 'null' doesn't seem to work (was going to do an 'if (Players.marker === null)' statement under startGame if so)
-    // const { name, marker } = Players; <-- OPTION: possibly replace this.name & this.marker all at once?
-  }
-
-  // Starts the game
-  const startGame = () => {
-    // Randomly assigns 'X' or 'O' marker to players. Possibly delete this feature entirely
-
-    // TODO: Fix markers showing as "undefined" (spills over into cell buttons when they are clicked. see code below)
-    // ATTEMPT #1: Simply changing from single to double quotes
-    // ATTEMPT #2: Change 'X' and 'O' to 'Gameboard(.checkWin).marker(s)[0][1]' respectively.
-    currentPlayer = Math.random() < 0.5 ? "X" : "O";
-
-    // Displays assigned player markers. 
-    document.querySelector("label[for=player-1]").innerText = `Player 1 (${currentPlayer})`;
-    document.querySelector("label[for=player-2]").innerText = `Player 2 (${currentPlayer === "X" ? "O" : "X"})`;
-
-    // TODO: Need more logic that starts the game here. Set Player 1's turn so they can make a move? 
-    // Do we even need Gameboard.board if it's empty anyway when the page loads and the start button is disabled in any other scenario or state?
-    Gameboard.board = [
-      [null, null, null], 
-      [null, null, null], 
-      [null, null, null],
-    ];
-  };
+  let currentPlayer = players[0];
 
   // Restarts the game
   const restartGame = () => {
@@ -163,7 +128,7 @@ function gameController () {
   // Switches player turns
   // TODO: Add logic that show the player's turn has switched (as textContent? in a DOM variable targeting a <span> or <h2> etc. Display markers in startGame is one way to do it)
   const switchTurn = () => {
-    currentPlayer = currentPlayer === Players[0] ? Players[1] : Players[0];
+    currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
   };
 
   // Gets the current player (for use in other functions outside of gameController)
@@ -178,7 +143,7 @@ function gameController () {
   // newRound();
 
   // TODO: should 'currentPlayer', 'Players' & 'newRound' be added or keep them private?
-  return { startGame, restartGame, switchTurn, getCurrentPlayer }; 
+  return { restartGame, switchTurn, getCurrentPlayer }; 
 };
 
 // Object that controls game flow on the display (also an example for now). Factory function wrapped inside an IIFE (module pattern)
@@ -199,7 +164,6 @@ const displayController = (function () {
     let names = document.getElementById('player-names').checkValidity();
     if (names) {
       e.preventDefault();
-      gameFlow.startGame();
       startBtn.setAttribute("disabled", "");
       restartBtn.removeAttribute("disabled");
       cells.forEach(cell => cell.removeAttribute("disabled"));
@@ -218,11 +182,11 @@ const displayController = (function () {
     cell.addEventListener('click', () => {
       const row = Math.floor(index / 3);
       const col = index % 3;
-      Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker); // TODO: gameFlow.getCurrentPlayer().marker showing as "undefined", meaning the marker itself is undefined
+      Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker);
       // cells[0].textContent = Gameboard.board; <-- This puts the entire array into the top left cell as commas. Possibly 'cell.textContent = Gameboard.board' after marker fix
       cell.setAttribute("disabled", "");
       gameFlow.switchTurn();
-      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`); // Uncaught TypeError: Cannot read properties of undefined (reading 'name') <-- loops several times before this
+      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`);
     });
   });
   
@@ -328,3 +292,56 @@ const displayController = (function () {
 //     }
 //   });
 // });
+
+// Attempt to randomly assign 'X' and 'O' markers to players at the beginning of the game
+
+  // TODO: Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
+  // TODO: Link name with HTML form element.
+
+  // TODO: Link marker with randomly assigned marker in startGame() function.
+  // ATTEMPT #1: Changing the value 'marker' to 'Gameboard(.checkWin).markers'
+  // let marker = Gameboard.checkWin.markers
+
+  // ATTEMPT #2: Factory function variant of "Player" code below (creating a player) & moved this outside of gameController to the global scope
+  // Player 2's marker has to be what Player 1's marker isn't. It can't be chosen at random along with Player 1.
+  // OPTION: const getMarker = () => marker - return getMarker at the bottom instead of 'marker'
+
+  // function createPlayer (name, oppMarker) {
+  //   const markers = ["X", "O"];
+  //   const marker = markers.filter(option => option !== oppMarker)[0]; or incorporate Math.random() < 0.5 ? "X" : "O"; somehow
+  //
+  //   return { name, marker };
+  // };
+
+  // List of players. 
+  // TODO: Marker is currently showing as "undefined" although debugging never got to this part of the code? (see attempts just above)
+  // function createPlayer (name, oppMarker) {
+  //   const markers = ["X", "O"];
+  //   const marker = markers.filter(option => option !== oppMarker)[0]; // or incorporate Math.random() < 0.5 ? "X" : "O"; somehow
+  
+  //   return { name, marker };
+  // };
+
+  // Starts the game
+  // const startGame = () => {
+    // Randomly assigns 'X' or 'O' marker to players. Possibly delete this feature entirely
+    // Player 2's marker has to be what Player 1's marker isn't. It can't be chosen at random along with Player 1.
+
+    // TODO: Fix markers showing as "undefined" (spills over into cell buttons when they are clicked. see code below)
+    // ATTEMPT #1: Simply changing from single to double quotes
+    // ATTEMPT #2: Change 'X' and 'O' to 'Gameboard(.checkWin).marker(s)[0][1]' respectively.
+    // currentPlayer = Math.random() < 0.5 ? "X" : "O";
+    // const player1 = createPlayer("Player 1");
+    // const player2 = createPlayer("Player 2", player1.marker);
+
+    // Displays assigned player markers. Showing as ([object Object]) next to both players now on display.
+    // document.querySelector("label[for=player-1]").innerText = `Player 1 (${player1})`; // player 1 = {name: 'Player 1', marker: 'X' or 'O'}
+    // document.querySelector("label[for=player-2]").innerText = `Player 2 (${player2})`; // player 2 = {name: 'Player 2', marker: whatever marker didn't get picked}
+
+    // TODO: Need more logic that starts the game here. Set Player 1's turn so they can make a move? 
+    // Do we even need Gameboard.board if it's empty anyway when the page loads and the start button is disabled in any other scenario or state?
+    // Gameboard.board = [
+    //   [null, null, null], 
+    //   [null, null, null], 
+    //   [null, null, null],
+    // ];
