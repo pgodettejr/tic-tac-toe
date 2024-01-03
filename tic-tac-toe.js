@@ -12,7 +12,7 @@ const Gameboard = (function () {
   // Allows access to the gameController function that controls game flow
   let state = gameController();
 
-  // Displays the current state of the game board (in the console)
+  // Displays the current state of the game board (in the console). Delete this once all the UI elements work.
   const displayBoard = () => {
     for (let row of board) {
       console.log(row);
@@ -68,11 +68,10 @@ const Gameboard = (function () {
   }
 
   // Update the board with the player's move
-  // TODO: May need to add logic to update the UI (displayController) with the current move.
   const makeMove = (row, col, marker) => {
     if (board[row][col] === null) {
       board[row][col] = marker;
-      console.log(`Position: (${row},${col}) now occupied by ${marker}`);
+      console.log(`Position: (${row},${col}) now occupied by ${marker}`); // TODO: Add logic to update the UI (displayController) with the current move, then delete this
       displayBoard();
       checkWin(); // The whole reason why this function can use 'marker' as a parameter and access it from checkWin(). Closures, baby!
     } else {
@@ -97,10 +96,11 @@ const Gameboard = (function () {
 // TODO 1: Test ChatGPT solution first (move this entire function to top of file)
 // TODO 2: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work. Have no mentions of any Gameboard or displayController functions/methods/variables)
 function gameController () {
+  // DOM for names that players entered into the "form" before game start. Still doesn't show player 2's name that they entered when turn is switched (shows "  's" turn)
   let player1 = document.getElementById('player-1').value;
   let player2 = document.getElementById('player-2').value; 
 
-  // List of players.
+  // List of players. Still doesn't show player 2's name that they entered when turn is switched (shows "  's" turn)
   const players = [
     {
       name: player1,
@@ -126,12 +126,12 @@ function gameController () {
   };
 
   // Switches player turns
-  // TODO: Add logic that show the player's turn has switched (as textContent? in a DOM variable targeting a <span> or <h2> etc. Display markers in startGame is one way to do it)
+  // TODO: Add logic that show the player's turn has switched (as textContent? in a DOM variable targeting a <span> or <h2> etc)
   const switchTurn = () => {
     currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
   };
 
-  // Gets the current player (for use in other functions outside of gameController)
+  // Gets the current player (for use in other functions outside of gameController). Still doesn't show player 2's name that they entered when turn is switched (shows "  's" turn)
   const getCurrentPlayer = () => currentPlayer;
 
   // TODO: This might be redundant with other code and/or may need to be added to forEach method on the board cells below (in displayController) 
@@ -186,7 +186,7 @@ const displayController = (function () {
       // cells[0].textContent = Gameboard.board; <-- This puts the entire array into the top left cell as commas. Possibly 'cell.textContent = Gameboard.board' after marker fix
       cell.setAttribute("disabled", "");
       gameFlow.switchTurn();
-      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`);
+      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`); // Still doesn't show player 2's name that they entered (shows "  's" turn)
     });
   });
   
