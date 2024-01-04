@@ -93,10 +93,13 @@ function gameController () {
   // OPTION #2: change 'getElementById' to querySelector('#player-X') (nope)
   // OPTION #4: remove 'let' from both entirely (nope)
   // OPTION #5: move DOM elements inside gameController parentheses as parameters instead (nope)
+  // OPTION #6: place DOM elements AND players object (as a different name) under a separate 'Players' factory function outside of gameController
   let player1 = document.getElementById('player-1').value;
   let player2 = document.getElementById('player-2').value; 
 
   // List of players. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons). Returns the same with or w/o template literals
+  // OPTION #7: Put both player1 & player2 under square brackets (nope)
+  // OPTION #8: Empty the players array, then write a function similar to addBookToLibrary that 'pushes' each object (name & marker) into the array to be read later on below
   const players = [
     {
       name: player1,
@@ -183,7 +186,8 @@ const displayController = (function () {
       cell.setAttribute("disabled", "");
       gameFlow.switchTurn();
       // Neither players name shows in console when turn is switched. Issue may be with 'players' object
-      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`); // OPTION #3: remove () from getCurrentPlayer (nope)
+      // OPTION #3: remove () from getCurrentPlayer (nope)
+      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`); 
     });
   });
   
