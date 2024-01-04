@@ -9,9 +9,6 @@ const Gameboard = (function () {
   // Player markers (attempted to move this from checkWin to target markers in displayController better but didn't work)
   // const markers = ["X", "O"];
 
-  // Allows access to the gameController function that controls game flow
-  let state = gameController();
-
   // Displays the current state of the game board (in the console). Delete this once all the UI elements work.
   const displayBoard = () => {
     for (let row of board) {
@@ -58,11 +55,6 @@ const Gameboard = (function () {
 
         // TODO: Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
         // TODO: Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
-
-        // Switch the players turn 
-        // TODO: may need to be newRound instead of switchTurn...or maybe both?
-        default:
-          state.switchTurn();
       }
     }
   }
@@ -88,8 +80,8 @@ const Gameboard = (function () {
     // }
   }
 
-  // TODO: Do we HAVE to return board & state? Can we keep them as private function & still work outside?
-  return { board, state, displayBoard, checkWin, makeMove }; 
+  // TODO: Do we HAVE to return board? Can we keep it as a private function & still work outside?
+  return { board, displayBoard, checkWin, makeMove }; 
 })();
 
 // Function that controls game flow, state of the game's turns & player info. 
@@ -97,17 +89,21 @@ const Gameboard = (function () {
 // TODO 2: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work. Have no mentions of any Gameboard or displayController functions/methods/variables)
 function gameController () {
   // DOM for names that players entered into the "form" before game start. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons)
+  // OPTION #1: change let to const (nope)
+  // OPTION #2: change 'getElementById' to querySelector('#player-X') (nope)
+  // OPTION #4: remove 'let' from both entirely (nope)
+  // OPTION #5: move DOM elements inside gameController parentheses as parameters instead (nope)
   let player1 = document.getElementById('player-1').value;
   let player2 = document.getElementById('player-2').value; 
 
-  // List of players. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons)
+  // List of players. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons). Returns the same with or w/o template literals
   const players = [
     {
       name: player1,
       marker: "X"
     },
     {
-      name: player2,
+      name: `${player2}`,
       marker: "O"
     }
   ];
@@ -186,7 +182,8 @@ const displayController = (function () {
       // cells[0].textContent = Gameboard.board; <-- Puts entire array into the top left cell as commas. Possibly 'cell.textContent = Gameboard.board or getCurrentPlayer().marker'
       cell.setAttribute("disabled", "");
       gameFlow.switchTurn();
-      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`); // Neither players name shows in console when turn is switched. Issue is with DOM or 'players' object above
+      // Neither players name shows in console when turn is switched. Issue may be with 'players' object
+      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`); // OPTION #3: remove () from getCurrentPlayer (nope)
     });
   });
   
