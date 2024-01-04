@@ -96,11 +96,11 @@ const Gameboard = (function () {
 // TODO 1: Test ChatGPT solution first (move this entire function to top of file)
 // TODO 2: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work. Have no mentions of any Gameboard or displayController functions/methods/variables)
 function gameController () {
-  // DOM for names that players entered into the "form" before game start. Still doesn't show player 2's name that they entered when turn is switched (shows "  's" turn)
+  // DOM for names that players entered into the "form" before game start. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons)
   let player1 = document.getElementById('player-1').value;
   let player2 = document.getElementById('player-2').value; 
 
-  // List of players. Still doesn't show player 2's name that they entered when turn is switched (shows "  's" turn)
+  // List of players. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons)
   const players = [
     {
       name: player1,
@@ -131,7 +131,7 @@ function gameController () {
     currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
   };
 
-  // Gets the current player (for use in other functions outside of gameController). Still doesn't show player 2's name that they entered when turn is switched (shows "  's" turn)
+  // Gets the current player (for use in other functions outside of gameController)
   const getCurrentPlayer = () => currentPlayer;
 
   // TODO: This might be redundant with other code and/or may need to be added to forEach method on the board cells below (in displayController) 
@@ -183,10 +183,10 @@ const displayController = (function () {
       const row = Math.floor(index / 3);
       const col = index % 3;
       Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker);
-      // cells[0].textContent = Gameboard.board; <-- This puts the entire array into the top left cell as commas. Possibly 'cell.textContent = Gameboard.board' after marker fix
+      // cells[0].textContent = Gameboard.board; <-- Puts entire array into the top left cell as commas. Possibly 'cell.textContent = Gameboard.board or getCurrentPlayer().marker'
       cell.setAttribute("disabled", "");
       gameFlow.switchTurn();
-      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`); // Still doesn't show player 2's name that they entered (shows "  's" turn)
+      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`); // Neither players name shows in console when turn is switched. Issue is with DOM or 'players' object above
     });
   });
   
