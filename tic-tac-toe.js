@@ -89,17 +89,13 @@ const Gameboard = (function () {
 // TODO 2: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work. Have no mentions of any Gameboard or displayController functions/methods/variables)
 function gameController () {
   // DOM for names that players entered into the "form" before game start. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons)
-  // OPTION #1: change let to const (nope)
-  // OPTION #2: change 'getElementById' to querySelector('#player-X') (nope)
-  // OPTION #4: remove 'let' from both entirely (nope)
-  // OPTION #5: move DOM elements inside gameController parentheses as parameters instead (nope)
-  // OPTION #6: place DOM elements AND players object (as a different name) under a separate 'Players' factory function outside of gameController
-  let player1 = document.getElementById('player-1').value;
-  let player2 = document.getElementById('player-2').value; 
+  // OPTION: place DOM elements AND players object (as a different name) under a separate 'Players' factory function outside of gameController
+  let player1 = document.getElementById("player-1").value;
+  let player2 = document.getElementById("player-2").value;
 
   // List of players. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons). Returns the same with or w/o template literals
-  // OPTION #7: Put both player1 & player2 under square brackets (nope)
-  // OPTION #8: Empty the players array, then write a function similar to addBookToLibrary that 'pushes' each object (name & marker) into the array to be read later on below
+  // OPTION: Empty the players array, then write a function similar to addBookToLibrary that 'pushes' each object (name & marker) into the array to be read later on below
+  // OPTION: Add a method to the players objects ('setNames' function). Then write 'gameFlow.setNames(...)' in 'displayController'
   const players = [
     {
       name: player1,
@@ -157,7 +153,7 @@ const displayController = (function () {
   // UI access to gameController above
   const gameFlow = gameController();
 
-  // 'Start' button functionality
+  // 'Start' button functionality. Potentially get this to "read" the names inputted & change the players objects to reflect that, not just validate that "something" was typed
   startBtn.addEventListener('click', (e) => {
     // Checks to see if Player name input boxes are filled out
     let names = document.getElementById('player-names').checkValidity();
