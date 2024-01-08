@@ -17,7 +17,7 @@ const Gameboard = (function () {
   };  
 
   // Checks to see if a player has won the game. 
-  // OPTION: return statements within switch statement could be 'break' instead.
+  // OPTION: return statements within switch statement could be 'break' instead (IF we choose another expression for switch - expression can't equal "true")
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
@@ -53,7 +53,7 @@ const Gameboard = (function () {
           displayController.disableAll();
           return true;
 
-        // TODO: Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon
+        // TODO: Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon (look at WesBos JS30 Unicorn lesson or research confetti effect CSS)
         // TODO: Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
       }
     }
@@ -67,7 +67,7 @@ const Gameboard = (function () {
       displayBoard();
       checkWin(); // The whole reason why this function can use 'marker' as a parameter and access it from checkWin(). Closures, baby!
     } else {
-      console.log(`Position: (${row},${col}) is already occupied. Try again.`);
+      console.log(`Position: (${row},${col}) is already occupied. Try again.`); // // TODO: Add logic to update the UI (displayController) with this message, then delete this
     }
 
     // Check winner example from RPS project. There was no separate disableButtons() function ever made though
@@ -95,15 +95,21 @@ function gameController () {
 
   // List of players. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons). Returns the same with or w/o template literals
   // OPTION: Empty the players array, then write a function similar to addBookToLibrary that 'pushes' each object (name & marker) into the array to be read later on below
-  // OPTION: Add a method to the players objects ('setNames' function). Then write 'gameFlow.setNames(...)' in 'displayController'
+  // OPTION: Add a method to the players objects ('setNames' function). Then write 'gameFlow.(getCurrentPlayer().)setNames(...)' in 'displayController' (nope - return is wrong?)
   const players = [
     {
       name: player1,
-      marker: "X"
+      marker: "X",
+      setName() {
+        return player1;
+      }
     },
     {
       name: `${player2}`,
-      marker: "O"
+      marker: "O",
+      setName() {
+        return player2;
+      }
     }
   ];
 
@@ -183,11 +189,13 @@ const displayController = (function () {
       gameFlow.switchTurn();
       // Neither players name shows in console when turn is switched. Issue may be with 'players' object
       // OPTION #3: remove () from getCurrentPlayer (nope)
-      console.log(`${gameFlow.getCurrentPlayer().name}'s turn.`); 
+      console.log(`${gameFlow.getCurrentPlayer().setName()}'s turn.`); 
     });
   });
   
-  // Disables the restart button & the board itself before game start & once the game ends
+  // Disables the restart button & the board itself before game start & once the game ends. 
+  // Works well for before the game starts but no so much after the game ends. May need to either redo this function or create a separate one for game end purposes.
+  // OPTION: rename this to disableStart and create a separate function named disableEnd and run that function under checkWin (only restart button is enabled - see startBtn code)
   const disableAll = () => {
     startBtn.removeAttribute("disabled");
     restartBtn.setAttribute("disabled", "");
