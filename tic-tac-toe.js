@@ -16,7 +16,7 @@ const Gameboard = (function () {
     }
   };  
 
-  // Checks to see if a player has won the game. 
+  // Checks to see if a player has won the game. See columns case for possible approach towards showing the winner in UI
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
@@ -35,6 +35,8 @@ const Gameboard = (function () {
         (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
         (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
+          // displayController.info.replaceChildren();
+          // displayController.info.textContent = `Marker ${marker} is the Winner!`;
           displayController.disableAll();
           return true;
 
@@ -54,6 +56,7 @@ const Gameboard = (function () {
 
         // TODO: Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon (look at WesBos JS30 Unicorn lesson or research confetti effect CSS)
         // TODO: Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
+        // See "columns" case above for possible example on these TODOs
       }
     }
   }
@@ -65,7 +68,7 @@ const Gameboard = (function () {
       displayBoard();
       checkWin();
     } else {
-      console.log(`Position: (${row},${col}) is already occupied. Try again.`); // // TODO: Add logic to update the UI (displayController) with this message, then delete this
+      console.log(`Position: (${row},${col}) is already occupied. Try again.`); // TODO: Add logic to update the UI (displayController) with this message, then delete this
     }
 
     // Check winner example from RPS project. There was no separate disableButtons() function ever made though
@@ -197,7 +200,7 @@ const displayController = (function () {
   disableAll();
 
   // TODO: See return comments above (what can we NOT declare & keep private without breaking the app)
-  return { cells, grid, startBtn, restartBtn, gameFlow, disableAll } 
+  return { cells, grid, info, startBtn, restartBtn, gameFlow, disableAll } 
 })();
 
 
