@@ -88,29 +88,23 @@ const Gameboard = (function () {
 // TODO 1: Test ChatGPT solution first (move this entire function to top of file)
 // TODO 2: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work. Have no mentions of any Gameboard or displayController functions/methods/variables)
 function gameController () {
-  // DOM for names that players entered into the "form" before game start. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons)
-  // OPTION: place DOM elements AND players object (as a different name) under a separate 'Players' factory function outside of gameController
+  // DOM for names that players entered into the "form" before game start
   let player1 = document.getElementById("player-1");
   let player2 = document.getElementById("player-2");
 
-  // List of players. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons). Returns the same with or w/o template literals
-  // OPTION: Empty the players array, then write a function similar to addBookToLibrary that 'pushes' each object (name & marker) into the array to be read later on below
-  // OPTION: Add a method to the players objects ('setNames' function). Then write 'gameFlow.(getCurrentPlayer().)setNames(...)' in 'displayController' (nope - return is wrong?)
-  // OPTION: remove 'let' values above & directly add DOM elements to the 'name' keys in the objects themselves (nope)
+  // List of players
   const players = [
     {
-      name: "",
-      marker: "X",
-      setName() {
+      name() {
         return player1.value;
-      }
+      },
+      marker: "X"
     },
     {
-      name: "",
-      marker: "O",
-      setName() {
+      name() {
         return player2.value;
-      }
+      },
+      marker: "O"
     }
   ];
 
@@ -128,7 +122,7 @@ function gameController () {
   };
 
   // Switches player turns
-  // TODO: Add logic that show the player's turn has switched (as textContent? in a DOM variable targeting a <span> or <h2> etc)
+  // TODO: Add logic that show the player's turn has switched (as textContent? in a DOM variable targeting a <span> or <info> etc)
   const switchTurn = () => {
     currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
   };
@@ -156,11 +150,15 @@ const displayController = (function () {
   const grid = document.querySelector('.board');
   const startBtn = document.querySelector('.start');
   const restartBtn = document.querySelector('.restart');
+  const info = document.getElementById('info');
 
   // UI access to gameController above
   const gameFlow = gameController();
 
-  // 'Start' button functionality. Potentially get this to "read" the names inputted & change the players objects to reflect that, not just validate that "something" was typed
+  // Text showing info on which player's turn it is (for Start button and Cells). Player name shows on console, but NOT here in the UI when this is used (empty string?)
+  const turnInfo = document.createTextNode(`${gameFlow.getCurrentPlayer().name()}'s turn.`);
+
+  // 'Start' button functionality
   startBtn.addEventListener('click', (e) => {
     // Checks to see if Player name input boxes are filled out
     let names = document.getElementById('player-names').checkValidity();
@@ -169,6 +167,7 @@ const displayController = (function () {
       startBtn.setAttribute("disabled", "");
       restartBtn.removeAttribute("disabled");
       cells.forEach(cell => cell.removeAttribute("disabled"));
+      info.appendChild(turnInfo); // Player name shows on console, but NOT here in the UI (empty string?)
     }
   });
 
@@ -185,12 +184,19 @@ const displayController = (function () {
       const row = Math.floor(index / 3);
       const col = index % 3;
       Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker);
-      // cells[0].textContent = Gameboard.board; <-- Puts entire array into the top left cell as commas. Possibly 'cell.textContent = Gameboard.board or getCurrentPlayer().marker'
-      cell.setAttribute("disabled", "");
+      cell.textContent = gameFlow.getCurrentPlayer().marker; 
+
+      if (cells[row][col] !== null) {
+        const cellInfo = document.createTextNode(`Position: (${row},${col}) now occupied by ${gameFlow.getCurrentPlayer().marker}`);
+        info.replaceChildren();
+        info.appendChild(cellInfo);
+      }
+
+      cell.setAttribute("disabled", ""); // OPTION: Marker "fades" when cell is disabled but still shows on UI. Replace disable with checkWin occupy message?
       gameFlow.switchTurn();
-      // Neither players name shows in console when turn is switched. Issue may be with 'players' object
-      // OPTION #3: remove () from getCurrentPlayer (nope)
-      console.log(`${gameFlow.getCurrentPlayer().setName()}'s turn.`); 
+      console.log(`${gameFlow.getCurrentPlayer().name()}'s turn.`); 
+      info.replaceChildren();
+      info.appendChild(turnInfo); // Player name shows on console, but NOT here in the UI (empty string?)
     });
   });
   
@@ -209,9 +215,6 @@ const displayController = (function () {
   // TODO: See return comments above (what can we NOT declare & keep private without breaking the app)
   return { cells, grid, startBtn, restartBtn, gameFlow, disableAll } 
 })();
-
-
-// TODO: Read 'Private Variables & Functions' &/or 'Prototypal Inheritance with Factories' from Factory Functions TOP lesson if needed regarding what we're returning in factories
 
 
 // Old and/or incorrect code
