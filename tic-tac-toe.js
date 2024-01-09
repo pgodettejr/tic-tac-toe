@@ -90,25 +90,26 @@ const Gameboard = (function () {
 function gameController () {
   // DOM for names that players entered into the "form" before game start. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons)
   // OPTION: place DOM elements AND players object (as a different name) under a separate 'Players' factory function outside of gameController
-  let player1 = document.getElementById("player-1").value;
-  let player2 = document.getElementById("player-2").value;
+  let player1 = document.getElementById("player-1");
+  let player2 = document.getElementById("player-2");
 
   // List of players. Neither players name shows in console when turn is switched (shows as empty string - see cell buttons). Returns the same with or w/o template literals
   // OPTION: Empty the players array, then write a function similar to addBookToLibrary that 'pushes' each object (name & marker) into the array to be read later on below
   // OPTION: Add a method to the players objects ('setNames' function). Then write 'gameFlow.(getCurrentPlayer().)setNames(...)' in 'displayController' (nope - return is wrong?)
+  // OPTION: remove 'let' values above & directly add DOM elements to the 'name' keys in the objects themselves (nope)
   const players = [
     {
-      name: player1,
+      name: "",
       marker: "X",
       setName() {
-        return player1;
+        return player1.value;
       }
     },
     {
-      name: `${player2}`,
+      name: "",
       marker: "O",
       setName() {
-        return player2;
+        return player2.value;
       }
     }
   ];
