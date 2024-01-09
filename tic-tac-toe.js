@@ -17,7 +17,6 @@ const Gameboard = (function () {
   };  
 
   // Checks to see if a player has won the game. 
-  // OPTION: return statements within switch statement could be 'break' instead (IF we choose another expression for switch - expression can't equal "true")
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
@@ -63,9 +62,8 @@ const Gameboard = (function () {
   const makeMove = (row, col, marker) => {
     if (board[row][col] === null) {
       board[row][col] = marker;
-      console.log(`Position: (${row},${col}) now occupied by ${marker}`); // TODO: Add logic to update the UI (displayController) with the current move, then delete this
       displayBoard();
-      checkWin(); // The whole reason why this function can use 'marker' as a parameter and access it from checkWin(). Closures, baby!
+      checkWin();
     } else {
       console.log(`Position: (${row},${col}) is already occupied. Try again.`); // // TODO: Add logic to update the UI (displayController) with this message, then delete this
     }
@@ -122,21 +120,12 @@ function gameController () {
   };
 
   // Switches player turns
-  // TODO: Add logic that show the player's turn has switched (as textContent? in a DOM variable targeting a <span> or <info> etc)
   const switchTurn = () => {
     currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
   };
 
   // Gets the current player (for use in other functions outside of gameController)
   const getCurrentPlayer = () => currentPlayer;
-
-  // TODO: This might be redundant with other code and/or may need to be added to forEach method on the board cells below (in displayController) 
-  // const newRound = () => {
-  //   Gameboard.makeMove();
-  //   console.log(`${getCurrentPlayer().name}'s turn.`);
-  // }
-
-  // newRound();
 
   // TODO: should 'currentPlayer', 'Players' & 'newRound' be added or keep them private?
   return { restartGame, switchTurn, getCurrentPlayer }; 
@@ -145,7 +134,6 @@ function gameController () {
 // Object that controls game flow on the display (also an example for now). Factory function wrapped inside an IIFE (module pattern)
 const displayController = (function () {
   // DOM for display elements
-  // TODO: May need to update 'cells' DOM to reflect as buttons, then update forEach method below accordingly
   const cells = document.querySelectorAll('.cell');
   const grid = document.querySelector('.board');
   const startBtn = document.querySelector('.start');
@@ -154,9 +142,6 @@ const displayController = (function () {
 
   // UI access to gameController above
   const gameFlow = gameController();
-
-  // Text showing info on which player's turn it is (for Start button and Cells). Player name shows on console, but NOT here in the UI when this is used (empty string?)
-  const turnInfo = document.createTextNode(`${gameFlow.getCurrentPlayer().name()}'s turn.`);
 
   // 'Start' button functionality
   startBtn.addEventListener('click', (e) => {
@@ -167,7 +152,7 @@ const displayController = (function () {
       startBtn.setAttribute("disabled", "");
       restartBtn.removeAttribute("disabled");
       cells.forEach(cell => cell.removeAttribute("disabled"));
-      info.appendChild(turnInfo); // Player name shows on console, but NOT here in the UI (empty string?)
+      info.textContent = `${gameFlow.getCurrentPlayer().name()}'s turn`;
     }
   });
 
@@ -178,7 +163,6 @@ const displayController = (function () {
   });
 
   // Places player marker in a given cell once clicked, then switches player turn
-  // OPTION: Update this method to reflect the cells as "Buttons" once the change is made in HTML?
   cells.forEach((cell, index) => {
     cell.addEventListener('click', () => {
       const row = Math.floor(index / 3);
@@ -196,7 +180,7 @@ const displayController = (function () {
       gameFlow.switchTurn();
       console.log(`${gameFlow.getCurrentPlayer().name()}'s turn.`); 
       info.replaceChildren();
-      info.appendChild(turnInfo); // Player name shows on console, but NOT here in the UI (empty string?)
+      info.textContent = `${gameFlow.getCurrentPlayer().name()}'s turn`;
     });
   });
   
