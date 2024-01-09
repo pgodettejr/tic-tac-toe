@@ -20,6 +20,7 @@ const Gameboard = (function () {
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
+    // const openCells = board.filter((row) => row[displayController.cells.col].marker === 0).map(row => row[displayController.cells.col]);
     for (let marker of markers) {
       switch (true) {
         case // Check the rows
@@ -27,6 +28,8 @@ const Gameboard = (function () {
         (board[1][0] === marker && board[1][1] === marker && board[1][2] === marker) ||
         (board[2][0] === marker && board[2][1] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
+          displayController.info.replaceChildren();
+          displayController.info.textContent = `Marker ${marker} is the Winner!`;
           displayController.disableAll();
           return true;
 
@@ -35,8 +38,8 @@ const Gameboard = (function () {
         (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
         (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
-          // displayController.info.replaceChildren();
-          // displayController.info.textContent = `Marker ${marker} is the Winner!`;
+          displayController.info.replaceChildren();
+          displayController.info.textContent = `Marker ${marker} is the Winner!`;
           displayController.disableAll();
           return true;
 
@@ -44,21 +47,35 @@ const Gameboard = (function () {
         (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
         (board[2][0] === marker && board[1][1] === marker && board[0][2] === marker):
           console.log(`Marker ${marker} is the Winner`);
+          displayController.info.replaceChildren();
+          displayController.info.textContent = `Marker ${marker} is the Winner!`;
           displayController.disableAll();
           return true;
 
         case // Check for draws
-        // TODO: Potentially move this back outside of the switch statement if it doesn't work. return goes back to 'false'. not sure if 'makeMove >= 9' is the best way to write
-        (makeMove >= 9):
+        // OPTIONS: Try 'makeMove >= 9', 'checkWin >= 9' & 'board !== null', then copy rows/cols case with all && and no || symbols if those don't work
+        (board[0][0] !== null && board[0][1] !== null && board[0][2] !== null) &&
+        (board[1][0] !== null && board[1][1] !== null && board[1][2] !== null) &&
+        (board[2][0] !== null && board[2][1] !== null && board[2][2] !== null):
           console.log(`Tie game :/`); 
+          displayController.info.replaceChildren();
+          displayController.info.textContent = `Tie game :/`;
           displayController.disableAll();
           return true;
 
         // TODO: Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon (look at WesBos JS30 Unicorn lesson or research confetti effect CSS)
         // TODO: Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
-        // See "columns" case above for possible example on these TODOs
       }
     }
+
+    // Check for draws
+    // if (board !== null) {
+    //   console.log(`Tie game :/`); 
+    //   displayController.info.replaceChildren();
+    //   displayController.info.textContent = `Tie game :/`;
+    //   displayController.disableAll();
+    //   return false;
+    // }
   }
 
   // Update the board with the player's move
@@ -112,14 +129,13 @@ function gameController () {
   let currentPlayer = players[0];
 
   // Restarts the game
+  // TODO: Switch to location.reload() - Read up on this. Might not even need Gameboard.board below this line once location.reload() is implemented.
   const restartGame = () => {
     Gameboard.board = [
       [null, null, null], 
       [null, null, null], 
       [null, null, null],
     ];
-
-    // TODO: Add logic here that clears the UI & resets any styling. location.reload()? Read up on this. Might not even need Gameboard.board above this line if we use it.
   };
 
   // Switches player turns
@@ -159,7 +175,8 @@ const displayController = (function () {
     }
   });
 
-  // 'Restart' button functionality. If we use location.reload() in our restartGame function above, simply replace () on addEventListener with restartGame & delete code below
+  // 'Restart' button functionality
+  // TODO: Switch to location.reload() in our restartGame function above & replace () on addEventListener with restartGame & delete code below
   restartBtn.addEventListener('click', () => {
     gameFlow.restartGame();
     startBtn.setAttribute("disabled", "");
@@ -180,10 +197,12 @@ const displayController = (function () {
       }
 
       cell.setAttribute("disabled", ""); // OPTION: Marker "fades" when cell is disabled but still shows on UI. Replace disable with checkWin occupy message?
+      // TODO: All code below this needs to be under some type of conditional (if else) statement to prevent switch turn message @ end of the game
+      // Try things like 'makeMove >= 9', 'checkWin >= 9' & if all cells are disabled
       gameFlow.switchTurn();
       console.log(`${gameFlow.getCurrentPlayer().name()}'s turn.`); 
       info.replaceChildren();
-      info.textContent = `${gameFlow.getCurrentPlayer().name()}'s turn`;
+      info.textContent = `${gameFlow.getCurrentPlayer().name()}'s turn`; 
     });
   });
   
