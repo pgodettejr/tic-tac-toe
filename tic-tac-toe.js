@@ -190,6 +190,7 @@ const displayController = (function () {
       Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker);
       cell.textContent = gameFlow.getCurrentPlayer().marker; 
 
+      // Updates info header in the UI with the clicked cell that has now been occupied (doesn't update correctly without this conditional...for some reason)
       if (cells[row][col] !== null) {
         const cellInfo = document.createTextNode(`Position: (${row},${col}) now occupied by ${gameFlow.getCurrentPlayer().marker}`);
         info.replaceChildren();
@@ -197,12 +198,14 @@ const displayController = (function () {
       }
 
       cell.setAttribute("disabled", ""); // OPTION: Marker "fades" when cell is disabled but still shows on UI. Replace disable with checkWin occupy message?
-      // TODO: All code below this needs to be under some type of conditional (if else) statement to prevent switch turn message @ end of the game
-      // Try things like 'makeMove >= 9', 'checkWin >= 9' & if all cells are disabled
-      gameFlow.switchTurn();
-      console.log(`${gameFlow.getCurrentPlayer().name()}'s turn.`); 
-      info.replaceChildren();
-      info.textContent = `${gameFlow.getCurrentPlayer().name()}'s turn`; 
+
+      // Switches the player's turn on the condition that there is no game winner yet, then displays the current turn on the UI
+      if (Gameboard.checkWin !== true) {
+        gameFlow.switchTurn();
+        console.log(`${gameFlow.getCurrentPlayer().name()}'s turn.`); 
+        info.replaceChildren();
+        info.textContent = `${gameFlow.getCurrentPlayer().name()}'s turn`;
+      } 
     });
   });
   
