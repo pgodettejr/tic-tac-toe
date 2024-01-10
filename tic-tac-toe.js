@@ -191,6 +191,8 @@ const displayController = (function () {
       cell.textContent = gameFlow.getCurrentPlayer().marker; 
 
       // Updates info header in the UI with the clicked cell that has now been occupied (doesn't update correctly without this conditional...for some reason)
+      // Boolean HAS to be strict equals otherwise this doesn't run at all
+      // This conditional seems entirely optional tbh
       if (cells[row][col] !== null) {
         const cellInfo = document.createTextNode(`Position: (${row},${col}) now occupied by ${gameFlow.getCurrentPlayer().marker}`);
         info.replaceChildren();
@@ -200,6 +202,8 @@ const displayController = (function () {
       cell.setAttribute("disabled", ""); // OPTION: Marker "fades" when cell is disabled but still shows on UI. Replace disable with checkWin occupy message?
 
       // Switches the player's turn on the condition that there is no game winner yet, then displays the current turn on the UI
+      // TODO: Switch turn message @ end of the game still shows up. Have tried strict and non-strict equals so far for 'Gameboard.checkWin != true'. "False" doesn't seem to work.
+      // OPTION: Try other things like 'Gameboard.makeMove <= 9' (nope), 'Gameboard.checkWin <= 9' (nope) & if all cells are disabled
       if (Gameboard.checkWin !== true) {
         gameFlow.switchTurn();
         console.log(`${gameFlow.getCurrentPlayer().name()}'s turn.`); 
