@@ -6,9 +6,6 @@ const Gameboard = (function () {
     [null, null, null],
   ];
 
-  // Player markers (attempted to move this from checkWin to target markers in displayController better but didn't work)
-  // const markers = ["X", "O"];
-
   // Displays the current state of the game board (in the console). Delete this once all the UI elements work.
   const displayBoard = () => {
     for (let row of board) {
@@ -16,7 +13,9 @@ const Gameboard = (function () {
     }
   };  
 
-  // Checks to see if a player has won the game. See columns case for possible approach towards showing the winner in UI
+  // Checks to see if a player has won the game
+  // OPTION: Possibly highlight winner's input box & marker icon (look at WesBos JS30 Unicorn lesson or research confetti effect CSS)
+  // OPTION: Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
@@ -29,7 +28,7 @@ const Gameboard = (function () {
           console.log(`Marker ${marker} is the Winner`);
           displayController.info.replaceChildren();
           displayController.info.textContent = `Marker ${marker} is the Winner!`;
-          displayController.disableAll();
+          displayController.disableBoard();
           return true;
 
         case // Check the columns
@@ -39,7 +38,7 @@ const Gameboard = (function () {
           console.log(`Marker ${marker} is the Winner`);
           displayController.info.replaceChildren();
           displayController.info.textContent = `Marker ${marker} is the Winner!`;
-          displayController.disableAll();
+          displayController.disableBoard();
           return true;
 
         case // Check the diagonals
@@ -48,7 +47,7 @@ const Gameboard = (function () {
           console.log(`Marker ${marker} is the Winner`);
           displayController.info.replaceChildren();
           displayController.info.textContent = `Marker ${marker} is the Winner!`;
-          displayController.disableAll();
+          displayController.disableBoard();
           return true;
 
         case // Check for draws
@@ -58,22 +57,10 @@ const Gameboard = (function () {
           console.log(`Tie game :/`); 
           displayController.info.replaceChildren();
           displayController.info.textContent = `Tie game :/`;
-          displayController.disableAll();
+          displayController.disableBoard();
           return true;
-
-        // TODO: Display "You Win!" to the winning player. Possibly highlight winner's input box & marker icon (look at WesBos JS30 Unicorn lesson or research confetti effect CSS)
-        // TODO: Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
       }
     }
-
-    // Check for draws
-    // if (board !== null) {
-    //   console.log(`Tie game :/`); 
-    //   displayController.info.replaceChildren();
-    //   displayController.info.textContent = `Tie game :/`;
-    //   displayController.disableAll();
-    //   return false;
-    // }
   }
 
   // Update the board with the player's move
@@ -82,18 +69,7 @@ const Gameboard = (function () {
       board[row][col] = marker;
       displayBoard();
       checkWin();
-    } else {
-      console.log(`Position: (${row},${col}) is already occupied. Try again.`); // TODO: Add logic to update the UI (displayController) with this message, then delete this
     }
-
-    // Check winner example from RPS project. There was no separate disableButtons() function ever made though
-    // if(playerScore === 5) {
-    //   winner.textContent = "You Win!";
-    //   disableButtons();
-    // } else if(computerScore === 5) {
-    //   winner.textContent = "You Lose";
-    //   disableButtons();
-    // }
   }
 
   // TODO: Do we HAVE to return board? Can we keep it as a private function & still work outside?
@@ -125,7 +101,7 @@ function gameController () {
   let currentPlayer = players[0];
 
   // Restarts the game
-  // TODO: Switch to location.reload() - Read up on this. Might not even need Gameboard.board below this line once location.reload() is implemented.
+  // TODO: location.reload() causes too many flickering effects. Can't interact with UI. Need to add more logic to reset all UI elements either here or below on the Restart button
   const restartGame = () => {
     Gameboard.board = [
       [null, null, null], 
@@ -172,7 +148,7 @@ const displayController = (function () {
   });
 
   // 'Restart' button functionality
-  // TODO: Switch to location.reload() in our restartGame function above & replace () on addEventListener with restartGame & delete code below
+  // TODO: location.reload() causes too many flickering effects. Can't interact with UI. Need to add more logic to reset all UI elements either here or above in restartGame
   restartBtn.addEventListener('click', () => {
     gameFlow.restartGame();
     startBtn.setAttribute("disabled", "");
@@ -197,20 +173,25 @@ const displayController = (function () {
     });
   });
   
-  // Disables the restart button & the board itself before game start & once the game ends. 
+  // Disables all cells on the board UI (for use when the game ends)
+  const disableBoard = () => {
+    cells.forEach(cell => cell.setAttribute("disabled", ""));
+  };
+
+  // Disables the restart button & the board itself before game start 
   // Works well for before the game starts but no so much after the game ends. May need to either redo this function or create a separate one for game end purposes.
   // OPTION: rename this to disableStart and create a separate function named disableEnd and run that function under checkWin (only restart button is enabled - see startBtn code)
   const disableAll = () => {
     startBtn.removeAttribute("disabled");
     restartBtn.setAttribute("disabled", "");
-    cells.forEach(cell => cell.setAttribute("disabled", ""));
+    disableBoard();
   };
 
   // Prevents interactivity with Restart and board cells until the game starts (when the Start button is pressed)
   disableAll();
 
   // TODO: See return comments above (what can we NOT declare & keep private without breaking the app)
-  return { cells, grid, info, startBtn, restartBtn, gameFlow, disableAll } 
+  return { cells, grid, info, startBtn, restartBtn, gameFlow, disableBoard, disableAll } 
 })();
 
 
