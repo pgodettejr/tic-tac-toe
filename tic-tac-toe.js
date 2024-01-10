@@ -20,7 +20,6 @@ const Gameboard = (function () {
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
-    // const openCells = board.filter((row) => row[displayController.cells.col].marker === 0).map(row => row[displayController.cells.col]);
     for (let marker of markers) {
       switch (true) {
         case // Check the rows
@@ -53,7 +52,6 @@ const Gameboard = (function () {
           return true;
 
         case // Check for draws
-        // OPTIONS: Try 'makeMove >= 9', 'checkWin >= 9' & 'board !== null', then copy rows/cols case with all && and no || symbols if those don't work
         (board[0][0] !== null && board[0][1] !== null && board[0][2] !== null) &&
         (board[1][0] !== null && board[1][1] !== null && board[1][2] !== null) &&
         (board[2][0] !== null && board[2][1] !== null && board[2][2] !== null):
@@ -102,15 +100,13 @@ const Gameboard = (function () {
   return { board, displayBoard, checkWin, makeMove }; 
 })();
 
-// Function that controls game flow, state of the game's turns & player info. 
-// TODO 1: Test ChatGPT solution first (move this entire function to top of file)
-// TODO 2: Move all functions in Gameboard to here & reorganize necessary code (IIFE didn't work. Have no mentions of any Gameboard or displayController functions/methods/variables)
+// Function that controls game flow, state of the game's turns & player info
 function gameController () {
   // DOM for names that players entered into the "form" before game start
   let player1 = document.getElementById("player-1");
   let player2 = document.getElementById("player-2");
 
-  // List of players
+  // List of players. Try to figure out a way to assign the markers at random on game start in the future (Math.random code from prior versions - see old code below)
   const players = [
     {
       name() {
@@ -189,22 +185,10 @@ const displayController = (function () {
       const col = index % 3;
       Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker);
       cell.textContent = gameFlow.getCurrentPlayer().marker; 
-
-      // Updates info header in the UI with the clicked cell that has now been occupied (doesn't update correctly without this conditional...for some reason)
-      // Boolean HAS to be strict equals otherwise this doesn't run at all
-      // This conditional seems entirely optional tbh
-      if (cells[row][col] !== null) {
-        const cellInfo = document.createTextNode(`Position: (${row},${col}) now occupied by ${gameFlow.getCurrentPlayer().marker}`);
-        info.replaceChildren();
-        info.appendChild(cellInfo);
-      }
-
       cell.setAttribute("disabled", ""); // OPTION: Marker "fades" when cell is disabled but still shows on UI. Replace disable with checkWin occupy message?
 
       // Switches the player's turn on the condition that there is no game winner yet, then displays the current turn on the UI
-      // TODO: Switch turn message @ end of the game still shows up. Have tried strict and non-strict equals so far for 'Gameboard.checkWin != true'. "False" doesn't seem to work.
-      // OPTION: Try other things like 'Gameboard.makeMove <= 9' (nope), 'Gameboard.checkWin <= 9' (nope) & if all cells are disabled
-      if (Gameboard.checkWin !== true) {
+      if (!Gameboard.checkWin()) {
         gameFlow.switchTurn();
         console.log(`${gameFlow.getCurrentPlayer().name()}'s turn.`); 
         info.replaceChildren();
