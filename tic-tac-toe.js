@@ -103,11 +103,15 @@ function gameController () {
   // Restarts the game
   // TODO: location.reload() causes too many flickering effects. Can't interact with UI. Need to add more logic to reset all UI elements either here or below on the Restart button
   const restartGame = () => {
-    Gameboard.board = [
-      [null, null, null], 
-      [null, null, null], 
-      [null, null, null],
-    ];
+    location.reload();
+    window.stop();
+    // Gameboard.board = [
+    //   [null, null, null], 
+    //   [null, null, null], 
+    //   [null, null, null],
+    // ];
+
+    // displayController.cells.forEach(cell => cell.replaceChildren());
   };
 
   // Switches player turns
@@ -149,10 +153,13 @@ const displayController = (function () {
 
   // 'Restart' button functionality
   // TODO: location.reload() causes too many flickering effects. Can't interact with UI. Need to add more logic to reset all UI elements either here or above in restartGame
-  restartBtn.addEventListener('click', () => {
-    gameFlow.restartGame();
-    startBtn.setAttribute("disabled", "");
-  });
+  restartBtn.addEventListener('click', gameFlow.restartGame());
+  // restartBtn.addEventListener('click', () => {
+  //   gameFlow.restartGame();
+  //   startBtn.setAttribute("disabled", "");
+  //   cells.forEach(cell => cell.removeAttribute("disabled"));
+  //   info.textContent = `${gameFlow.getCurrentPlayer().name()}'s turn`;
+  // });
 
   // Places player marker in a given cell once clicked, then switches player turn
   cells.forEach((cell, index) => {
