@@ -7,8 +7,6 @@ const Gameboard = (function () {
   ]; 
 
   // Checks to see if a player has won the game
-  // OPTION: Possibly highlight winner's input box & marker icon (look at WesBos JS30 Unicorn lesson or research confetti effect CSS)
-  // OPTION: Add logic to display "You Lose!" to the other player. Possibly highlight loser's input box & marker icon
   const checkWin = () => {
     const board = Gameboard.board;
     const markers = ["X", "O"];
@@ -18,7 +16,6 @@ const Gameboard = (function () {
         (board[0][0] === marker && board[0][1] === marker && board[0][2] === marker) ||
         (board[1][0] === marker && board[1][1] === marker && board[1][2] === marker) ||
         (board[2][0] === marker && board[2][1] === marker && board[2][2] === marker):
-          console.log(`Marker ${marker} is the Winner`);
           displayController.info.replaceChildren();
           displayController.info.textContent = `Marker ${marker} is the Winner!`;
           displayController.disableBoard();
@@ -28,7 +25,6 @@ const Gameboard = (function () {
         (board[0][0] === marker && board[1][0] === marker && board[2][0] === marker) ||
         (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
         (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker):
-          console.log(`Marker ${marker} is the Winner`);
           displayController.info.replaceChildren();
           displayController.info.textContent = `Marker ${marker} is the Winner!`;
           displayController.disableBoard();
@@ -37,7 +33,6 @@ const Gameboard = (function () {
         case // Check the diagonals
         (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
         (board[2][0] === marker && board[1][1] === marker && board[0][2] === marker):
-          console.log(`Marker ${marker} is the Winner`);
           displayController.info.replaceChildren();
           displayController.info.textContent = `Marker ${marker} is the Winner!`;
           displayController.disableBoard();
@@ -47,7 +42,6 @@ const Gameboard = (function () {
         (board[0][0] !== null && board[0][1] !== null && board[0][2] !== null) &&
         (board[1][0] !== null && board[1][1] !== null && board[1][2] !== null) &&
         (board[2][0] !== null && board[2][1] !== null && board[2][2] !== null):
-          console.log(`Tie game :/`); 
           displayController.info.replaceChildren();
           displayController.info.textContent = `Tie game :/`;
           displayController.disableBoard();
@@ -65,8 +59,7 @@ const Gameboard = (function () {
     }
   }
 
-  // TODO: Do we HAVE to return board? Can we keep it as a private function & still work outside?
-  return { board, displayBoard, checkWin, makeMove }; 
+  return { board, checkWin, makeMove }; 
 })();
 
 // Function that controls game flow, state of the game's turns & player info
@@ -75,7 +68,7 @@ function gameController () {
   let player1 = document.getElementById("player-1");
   let player2 = document.getElementById("player-2");
 
-  // List of players. Try to figure out a way to assign the markers at random on game start in the future (Math.random code from prior versions - see old code below)
+  // List of players
   const players = [
     {
       name() {
@@ -106,7 +99,6 @@ function gameController () {
   // Gets the current player (for use in other functions outside of gameController)
   const getCurrentPlayer = () => currentPlayer;
 
-  // TODO: should 'currentPlayer', 'Players' & 'newRound' be added or keep them private?
   return { restartGame, switchTurn, getCurrentPlayer }; 
 };
 
@@ -145,7 +137,7 @@ const displayController = (function () {
       const col = index % 3;
       Gameboard.makeMove(row, col, gameFlow.getCurrentPlayer().marker);
       cell.textContent = gameFlow.getCurrentPlayer().marker; 
-      cell.setAttribute("disabled", ""); // OPTION: Marker "fades" when cell is disabled but still shows on UI. Replace disable with checkWin occupy message?
+      cell.setAttribute("disabled", "");
 
       // Switches the player's turn on the condition that there is no game winner yet, then displays the current turn on the UI
       if (!Gameboard.checkWin()) {
@@ -172,162 +164,5 @@ const displayController = (function () {
   // Prevents interactivity with Restart and board cells until the game starts (when the Start button is pressed)
   disableAll();
 
-  // TODO: See return comments above (what can we NOT declare & keep private without breaking the app)
   return { cells, grid, info, startBtn, restartBtn, gameFlow, disableBoard, disableAll } 
 })();
-
-
-// Old and/or incorrect code
-
-// const marker = ["X", "O"]; <-- had "global" scope within IIFE, now is just within checkWin() function (also within IIFE)
-
- // Displays the current state of the game board (in the console). Delete this once all the UI elements work.
-  // const displayBoard = () => {
-  //   for (let row of board) {
-  //     console.log(row);
-  //   }
-  // }; 
-
-//   // Check the rows
-//   for (let i = 0; i < 3; i++) {
-//     if (
-//       board[i][0] === marker &&
-//       board[i][1] === marker &&
-//       board[i][2] === marker
-//     ) {
-//       console.log(`Marker ${marker} is the Winner`);
-//       return true;
-//     }
-//   }
-
-//   // Check the columns
-//   for (let i = 0; i < 3; i++) {
-//     if (
-//       board[i][0] === marker &&
-//       board[i][1] === marker &&
-//       board[i][2] === marker
-//     ) {
-//       console.log(`Marker ${marker} is the Winner`);
-//       return true;
-//     }
-//   }
-
-  // Alternative logic for columns. Longer, not as good. Keep in case for loop above this doesn't work
-  // if (
-  //   (board[0][0] === marker && board[1][0] === marker && board[2][0] === marker) ||
-  //   (board[0][1] === marker && board[1][1] === marker && board[2][1] === marker) ||
-  //   (board[0][2] === marker && board[1][2] === marker && board[2][2] === marker)
-  // ) {
-  //   return true;
-  // }
-
-  // Check the diagonals
-//   if (
-//     (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) ||
-//     (board[0][2] === marker && board[1][1] === marker && board[2][0] === marker)
-//   ) {
-//     console.log(`Marker ${marker} is the Winner`);
-//     return true;
-//   }
-      // SHOULD check for draws but doesn't
-      // if (makeMove >= 9 && checkWin === false) { 
-      //   console.log(`Tie game :/`); 
-      // }
-
-// const markerUI = Gameboard.markers; // Would need to move markers variable up the scope (see checkWin above)
-  // for (const marker in markers) {
-  //   const markers[0] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
-  //   const markers[1] = document.createElement("p"); // Cannot redeclare block-scoped variable 'markers'
-
-  //   markers[0].setAttribute("data-cell", "X");
-  //   markers[1].setAttribute("data-cell", "O");
-
-  //   const markerX = document.createTextNode(`${marker[0]}`);
-  //   const markerO = document.createTextNode(`${marker[1]}`);
-
-  //   markers[0].appendChild(markerX);
-  //   markers[1].appendChild(markerO);
-  // }
-
-  // currentPlayer: new Players,
-  // gameResult: {
-  //   winningPlayer: null,
-  //   losingPlayer: null,
-  // },
-  // boardState: function (Gameboard) {
-  //   return Gameboard;
-  // }
-
-// Old logic for adding player assigned marker to the cell they clicked on
-// cells.forEach((cell) => {
-//   cell.addEventListener('click', () => {
-//     for (let row of board.board) {
-//       let addMarker = document.createTextNode(`${currentPlayer}`);
-//       board.makeMove(row);
-//       cell.appendChild(addMarker);
-//     }
-//   });
-// });
-
-// Attempt to randomly assign 'X' and 'O' markers to players at the beginning of the game
-
-  // TODO: Do we need this.crossMarker = "X" or "crossMarker" & same with nought?
-  // TODO: Link name with HTML form element.
-
-  // TODO: Link marker with randomly assigned marker in startGame() function.
-  // ATTEMPT #1: Changing the value 'marker' to 'Gameboard(.checkWin).markers'
-  // let marker = Gameboard.checkWin.markers
-
-  // ATTEMPT #2: Factory function variant of "Player" code below (creating a player) & moved this outside of gameController to the global scope
-  // Player 2's marker has to be what Player 1's marker isn't. It can't be chosen at random along with Player 1.
-  // OPTION: const getMarker = () => marker - return getMarker at the bottom instead of 'marker'
-
-  // function createPlayer (name, oppMarker) {
-  //   const markers = ["X", "O"];
-  //   const marker = markers.filter(option => option !== oppMarker)[0]; or incorporate Math.random() < 0.5 ? "X" : "O"; somehow
-  //
-  //   return { name, marker };
-  // };
-
-  // List of players. 
-  // TODO: Marker is currently showing as "undefined" although debugging never got to this part of the code? (see attempts just above)
-  // function createPlayer (name, oppMarker) {
-  //   const markers = ["X", "O"];
-  //   const marker = markers.filter(option => option !== oppMarker)[0]; // or incorporate Math.random() < 0.5 ? "X" : "O"; somehow
-  
-  //   return { name, marker };
-  // };
-
-  // Starts the game
-  // const startGame = () => {
-    // Randomly assigns 'X' or 'O' marker to players. Possibly delete this feature entirely
-    // Player 2's marker has to be what Player 1's marker isn't. It can't be chosen at random along with Player 1.
-
-    // TODO: Fix markers showing as "undefined" (spills over into cell buttons when they are clicked. see code below)
-    // ATTEMPT #1: Simply changing from single to double quotes
-    // ATTEMPT #2: Change 'X' and 'O' to 'Gameboard(.checkWin).marker(s)[0][1]' respectively.
-    // currentPlayer = Math.random() < 0.5 ? "X" : "O";
-    // const player1 = createPlayer("Player 1");
-    // const player2 = createPlayer("Player 2", player1.marker);
-
-    // Displays assigned player markers. Showing as ([object Object]) next to both players now on display.
-    // document.querySelector("label[for=player-1]").innerText = `Player 1 (${player1})`; // player 1 = {name: 'Player 1', marker: 'X' or 'O'}
-    // document.querySelector("label[for=player-2]").innerText = `Player 2 (${player2})`; // player 2 = {name: 'Player 2', marker: whatever marker didn't get picked}
-
-    // TODO: Need more logic that starts the game here. Set Player 1's turn so they can make a move? 
-    // Do we even need Gameboard.board if it's empty anyway when the page loads and the start button is disabled in any other scenario or state?
-    // Gameboard.board = [
-    //   [null, null, null], 
-    //   [null, null, null], 
-    //   [null, null, null],
-    // ];
-
-    // window.stop();
-
-    // displayController.cells.forEach(cell => cell.replaceChildren());
-    // restartBtn.addEventListener('click', () => {
-    //   gameFlow.restartGame();
-    //   startBtn.setAttribute("disabled", "");
-    //   cells.forEach(cell => cell.removeAttribute("disabled"));
-    //   info.textContent = `${gameFlow.getCurrentPlayer().name()}'s turn`;
-    // });
