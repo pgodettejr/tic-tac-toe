@@ -54,7 +54,6 @@ const Gameboard = (function () {
   const makeMove = (row, col, marker) => {
     if (board[row][col] === null) {
       board[row][col] = marker;
-      displayBoard();
       checkWin();
     }
   }
