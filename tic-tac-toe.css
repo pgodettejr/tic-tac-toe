@@ -63,7 +63,7 @@ label, input {
 }
 
 .form-row input:invalid {
-  border: 1px solid red; /* or #D55C5F */
+  border: 1px solid red;
   box-shadow: none;
 }
 
@@ -89,7 +89,6 @@ label, input {
   cursor: pointer;
   line-height: 100px;
   text-align: center;
-  /* vertical-align: middle; */
 }
 
 .cell:hover {

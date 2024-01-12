@@ -1,17 +1,10 @@
-// Game board example object (3 x 3 array). Factory function wrapped inside an IIFE (module pattern). Could make board into an object with 3 properties, each with 3-index arrays
+// Game board example object (3 x 3 array). Factory function wrapped inside an IIFE (module pattern)
 const Gameboard = (function () {
   let board = [
     [null, null, null], 
     [null, null, null], 
     [null, null, null],
-  ];
-
-  // Displays the current state of the game board (in the console). Delete this once all the UI elements work.
-  const displayBoard = () => {
-    for (let row of board) {
-      console.log(row);
-    }
-  };  
+  ]; 
 
   // Checks to see if a player has won the game
   // OPTION: Possibly highlight winner's input box & marker icon (look at WesBos JS30 Unicorn lesson or research confetti effect CSS)
@@ -101,17 +94,8 @@ function gameController () {
   let currentPlayer = players[0];
 
   // Restarts the game
-  // TODO: location.reload() causes too many flickering effects. Can't interact with UI. Need to add more logic to reset all UI elements either here or below on the Restart button
   const restartGame = () => {
     location.reload();
-    window.stop();
-    // Gameboard.board = [
-    //   [null, null, null], 
-    //   [null, null, null], 
-    //   [null, null, null],
-    // ];
-
-    // displayController.cells.forEach(cell => cell.replaceChildren());
   };
 
   // Switches player turns
@@ -126,7 +110,7 @@ function gameController () {
   return { restartGame, switchTurn, getCurrentPlayer }; 
 };
 
-// Object that controls game flow on the display (also an example for now). Factory function wrapped inside an IIFE (module pattern)
+// Object that controls game flow on the display. Factory function wrapped inside an IIFE (module pattern)
 const displayController = (function () {
   // DOM for display elements
   const cells = document.querySelectorAll('.cell');
@@ -152,14 +136,7 @@ const displayController = (function () {
   });
 
   // 'Restart' button functionality
-  // TODO: location.reload() causes too many flickering effects. Can't interact with UI. Need to add more logic to reset all UI elements either here or above in restartGame
-  restartBtn.addEventListener('click', gameFlow.restartGame());
-  // restartBtn.addEventListener('click', () => {
-  //   gameFlow.restartGame();
-  //   startBtn.setAttribute("disabled", "");
-  //   cells.forEach(cell => cell.removeAttribute("disabled"));
-  //   info.textContent = `${gameFlow.getCurrentPlayer().name()}'s turn`;
-  // });
+  restartBtn.addEventListener('click', gameFlow.restartGame);
 
   // Places player marker in a given cell once clicked, then switches player turn
   cells.forEach((cell, index) => {
@@ -185,9 +162,7 @@ const displayController = (function () {
     cells.forEach(cell => cell.setAttribute("disabled", ""));
   };
 
-  // Disables the restart button & the board itself before game start 
-  // Works well for before the game starts but no so much after the game ends. May need to either redo this function or create a separate one for game end purposes.
-  // OPTION: rename this to disableStart and create a separate function named disableEnd and run that function under checkWin (only restart button is enabled - see startBtn code)
+  // Disables the restart button & the board itself (for use before the game starts) 
   const disableAll = () => {
     startBtn.removeAttribute("disabled");
     restartBtn.setAttribute("disabled", "");
@@ -205,6 +180,13 @@ const displayController = (function () {
 // Old and/or incorrect code
 
 // const marker = ["X", "O"]; <-- had "global" scope within IIFE, now is just within checkWin() function (also within IIFE)
+
+ // Displays the current state of the game board (in the console). Delete this once all the UI elements work.
+  // const displayBoard = () => {
+  //   for (let row of board) {
+  //     console.log(row);
+  //   }
+  // }; 
 
 //   // Check the rows
 //   for (let i = 0; i < 3; i++) {
@@ -339,3 +321,13 @@ const displayController = (function () {
     //   [null, null, null], 
     //   [null, null, null],
     // ];
+
+    // window.stop();
+
+    // displayController.cells.forEach(cell => cell.replaceChildren());
+    // restartBtn.addEventListener('click', () => {
+    //   gameFlow.restartGame();
+    //   startBtn.setAttribute("disabled", "");
+    //   cells.forEach(cell => cell.removeAttribute("disabled"));
+    //   info.textContent = `${gameFlow.getCurrentPlayer().name()}'s turn`;
+    // });
