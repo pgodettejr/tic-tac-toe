@@ -163,5 +163,5 @@ const displayController = (function () {
   // Prevents interactivity with Restart and board cells until the game starts (when the Start button is pressed)
   disableAll();
 
-  return { cells, grid, info, startBtn, restartBtn, gameFlow, disableBoard, disableAll } 
+  return { cells, info, startBtn, restartBtn, gameFlow, disableBoard, disableAll } 
 })();
