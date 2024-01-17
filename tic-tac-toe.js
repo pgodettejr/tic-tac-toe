@@ -58,6 +58,7 @@ const Gameboard = (function () {
     }
   }
 
+  // TODO: Test the deletion of "board" in this return statement. Does the game still work without it?
   return { board, checkWin, makeMove }; 
 })();
 
@@ -105,7 +106,6 @@ function gameController () {
 const displayController = (function () {
   // DOM for display elements
   const cells = document.querySelectorAll('.cell');
-  // const grid = document.querySelector('.board');
   const startBtn = document.querySelector('.start');
   const restartBtn = document.querySelector('.restart');
   const info = document.getElementById('info');
@@ -163,5 +163,6 @@ const displayController = (function () {
   // Prevents interactivity with Restart and board cells until the game starts (when the Start button is pressed)
   disableAll();
 
-  return { info, startBtn, restartBtn, gameFlow, disableBoard, disableAll } 
+  // TODO: Test the deletion of "gameFlow" and "disableAll" in this return statement. Does the game still work without them?
+  return { info, gameFlow, disableBoard, disableAll } 
 })();
