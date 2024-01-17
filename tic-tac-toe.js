@@ -163,6 +163,6 @@ const displayController = (function () {
   // Prevents interactivity with Restart and board cells until the game starts (when the Start button is pressed)
   disableAll();
 
-  // TODO: Test the deletion of "gameFlow" and "disableAll" in this return statement. Does the game still work without them?
-  return { info, gameFlow, disableBoard, disableAll } 
+  // TODO: Test the deletion of "gameFlow"  in this return statement. Does the game still work without it?
+  return { info, gameFlow, disableBoard } 
 })();
